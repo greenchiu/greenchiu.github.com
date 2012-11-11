@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2012-11-10T23:34:33+08:00</updated>
+  <updated>2012-11-11T19:44:09+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,15 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[定個目標]]></title>
+    <link href="http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao/"/>
+    <updated>2012-11-11T19:22:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/600/400/IMG_2652.jpg" title="" ></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Hello world.]]></title>
