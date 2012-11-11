@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2012-11-11T19:44:09+08:00</updated>
+  <updated>2012-11-11T20:19:13+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -18,7 +18,32 @@
     <link href="http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao/"/>
     <updated>2012-11-11T19:22:00+08:00</updated>
     <id>http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao</id>
-    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/600/400/IMG_2652.jpg" title="" ></p>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/IMG_2652.jpg" width="400"></p>
+
+<blockquote><p>在經過一段有點走入死胡同的時間後, 也開始決定逼迫自己來做一些事情; 可能我這個人就是欠扁吧 … 不給自己一些壓力就會一直死拖活拖的往後延, 因此決定為自己設定一些目標/方式, 讓自己有一個努力的方向或是強制的學習.</p></blockquote>
+
+
+<!-- more -->
+
+
+<p>剛換工作的那段時間, 一方面在努力熟悉新的工作環境, 一方面也期望自己可以做些什麼事情, 那時希望自己在PHP &amp; MySQL上可以有所進步, 也想要學Yii, 同時又很貪心的想要把Front-end的部份吃掉; 對自己有期望是好的, 但是在沒有做好優先權的設定跟一個完整的讀書計畫的結果, 就是一團遭 …</p>
+
+<p>當然不可否認的是自己一次想要學習太多東西,在練習PHP後端的時候, 在寫後台呈現資料的時候我就又要求這邊的互動要做到怎樣怎樣, 明明今天設定要練習PHP的時間, 結果全部用到寫jQuery去了 … 類似這樣的狀況層出不窮 = =a</p>
+
+<p>所以我今天就先定幾個目標</p>
+
+<ul>
+<li>每兩個禮拜的技術分享, 分享結束後都要Post一篇Blog, 至少做個Memo.</li>
+<li>讀完書後, 要有讀書報告, 至少要有簡單的心得.</li>
+<li>動腦會議感興趣的內容, 整理成一篇完整的內容在分享上來.</li>
+</ul>
+
+
+<p>嗯, 程式方面的技術分享可能會比較不定期, 就看最近有練習或研究什麼內容就在額外的分享吧.</p>
+
+<p>另外, 這次的封面圖, 就是這篇文章的祭品啦 … 今天下午特地跑去天瓏買的, 目前先看學徒模式, 看完後再跟大家分享.</p>
+
+<p>如果大家有什麼不錯的方式, 也分享給我囉, 謝謝.</p>
 ]]></content>
   </entry>
   
