@@ -4,7 +4,7 @@
   <title><![CDATA[Category: study | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/study/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2012-11-17T12:19:14+08:00</updated>
+  <updated>2012-11-17T18:38:24+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[學徒模式-讀書心得]]></title>
+    <link href="http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/"/>
+    <updated>2012-11-17T17:06:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de</id>
+    <content type="html"><![CDATA[<p><img src="/images/IMG_2682.jpg" width="400"> <br/>
+<blockquote><p>問題不在於征服一個未知的問題，而是一步一步，走出全新的路徑。</p><footer><strong>Gustav Mahler</strong> <cite>音樂家與作曲家</cite></footer></blockquote></p>
+
+<!-- more -->
+
+
+<p>第一次聽到這本書，是在 Nexdoor's Study Meeting 由<a href="http://blog.buginception.com/">Aaron Hunang</a>分享的內容，當時雖然有一些想法，不過也沒有特別的去借來看看。最近這一段時間，自己面臨一些學習上的問題，就跑去天瓏書局買了這本書。</p>
+
+<p>目前看了大該4/5吧，雖然有些翻譯覺得小小詭異，不過其實在這中間真的找到不少可以參考的方式，下面列出2個是我現在覺得很困擾我的問題。</p>
+
+<h2>志趣相同的夥伴</h2>
+
+<p><blockquote><p>沒有任何力量比得上由一群有才幹的人組成專注解決相關問題的社群。</p><footer><strong>Paul Graham</strong> <cite>駭客與畫家</cite></footer></blockquote>
+該怎麼說，我現在個工作環境，大家數的同伴，都是屬於Java的工程師，雖然也有一起努力的iOS工程師，但是可能因為在不同的Team討論的機會也不多，大多數的問題都是由自己在google或者是stackoverflow上查找自己的問題。</p>
+
+<p>在書中有提到一個這種狀況的解決方案，就是找尋志趣相同的夥伴，找一個/或多個人一起討論或者是成立聚會或者是加入一些社群，都是一個很不錯的方向。所以我也決定要繼續在上班的時候多跟前同事<del>聊天</del>討論一些相關的問題，希望在工作跟友誼方面都會更進一步。(話說之前在WebGene的時候也常跟<a href="http://patw.idv.tw/blog/">Patrick Wang</a>討論問題)</p>
+
+<h2>使用程式碼</h2>
+
+<p><blockquote><p>準備最好的方式是寫程式，以及研究其他人所寫的偉大程式。<br/>以我為例，我走到資訊科學大樓外的垃圾桶，從裡面撈出他們作業系統的程式碼列表。</p><footer><strong>比爾蓋茲</strong> <cite>Programmers at Work</cite></footer></blockquote>
+練習跟找教學基本上大該是每天上班都會做的事情，但常常都覺得自己的進步太少，很多時候都是直接抓Third Party Libs直接使用，雖然在速度上快了不少，不過也錯失了很多進步的機會。</p>
+
+<p>書上特別點出可以去看看別人提供的Libs，程式碼是如何寫的，透過閱讀別人的程式碼，學習別人的技巧與考慮的方向，配合版本控制，可以了解程式碼演進的過程。最後試著去比較自已與別人寫作的方式，可以找出自己的不足。</p>
+
+<h2>最後最後 …</h2>
+
+<p>雖然還有很多部分，是值得做分享的，不過還是建議可以跟別人借來閱讀一下，或者是去買一本來看，書名<a href="http://www.tenlong.com.tw/items/986276256X?item_id=338410">學徒模式－優秀軟體開發者的養成之路</a>，個人覺得很值得收藏。</p>
+
+<p>雖然這次有點不知道算不算讀書心得 … 不過完成了第一本祭品，下一本就是半路叛逃啦，希望可以快一點看完在分享給大家囉。</p>
+
+<p>如果內容上大家覺得有任何的問題或者是內容有缺失，也請指正或告知，謝謝。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[定個目標]]></title>
