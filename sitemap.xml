@@ -2,26 +2,30 @@
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
         <loc>http://greenchiu.github.com/blog/2012/11/10/hello-world/</loc>
-        <lastmod>2012-11-10T15:15:48+08:00</lastmod>
+        <lastmod>2013-01-26T12:42:35+08:00</lastmod>
     </url>
     <url>
         <loc>http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao/</loc>
-        <lastmod>2012-11-11T20:25:01+08:00</lastmod>
+        <lastmod>2013-01-26T12:42:35+08:00</lastmod>
     </url>
     <url>
         <loc>http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/</loc>
-        <lastmod>2012-11-17T18:37:41+08:00</lastmod>
+        <lastmod>2013-01-26T12:42:35+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de/</loc>
+        <lastmod>2013-01-26T16:03:50+08:00</lastmod>
     </url>
     <url>
         <loc>http://greenchiu.github.com/about-green/</loc>
-        <lastmod>2012-11-10T23:34:14+08:00</lastmod>
+        <lastmod>2013-01-26T12:42:35+08:00</lastmod>
     </url>
     <url>
         <loc>http://greenchiu.github.com/blog/archives/</loc>
-        <lastmod>2012-11-17T18:37:41+08:00</lastmod>
+        <lastmod>2013-01-26T16:03:50+08:00</lastmod>
     </url>
     <url>
         <loc>http://greenchiu.github.com/</loc>
-        <lastmod>2012-11-17T18:37:41+08:00</lastmod>
+        <lastmod>2013-01-26T16:03:50+08:00</lastmod>
     </url>
 </urlset>

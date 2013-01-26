@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: Objective-C | Green]]></title>
+  <link href="http://greenchiu.github.com/blog/categories/objective-c/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.com/"/>
+  <updated>2013-01-26T16:06:55+08:00</updated>
+  <id>http://greenchiu.github.com/</id>
+  <author>
+    <name><![CDATA[Green Chiu]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[iOS開發小心得]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de/"/>
+    <updated>2013-01-26T15:01:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de</id>
+    <content type="html"><![CDATA[<p><blockquote><p>在專案改組跟新專案的切換告一段落之後，終於又有時間繼續來更新了，順便把最近在專案上使用的工具稍微記錄一下。</p></blockquote></p>
+
+<!--more-->
+
+
+<h2>CocoaPods</h2>
+
+<p>最近很紅用來管理Objective-C Project的第三方library工具, 主要是使用Ruby來進行安裝. 安裝使用的方式請參考官網<a href="http://cocoapods.org">Reference</a><br/>
+OS X Mountain Lion無法安裝的排除方式: <a href="http://www.zlu.me/blog/2012/02/21/install-native-ruby-gem-in-mountain-lion-preview/">Install Native Ruby Gem in Mountain Lion Preview</a></p>
+
+<h2>AppCooker + AppTasker</h2>
+
+<p><img src="http://www.appcooker.com/wp-content/uploads/2012/09/App-Cooker-Header-Logo.png"></p>
+
+<p>AppCooker是一個一個專門用來設計iOS App的Mockup or wireframe的工具.<br/>
+主要的功能可以分成:</p>
+
+<ul>
+<li>Icon的紀錄 (不同版本).</li>
+<li>App's Mockup or wireframe.</li>
+<li>在不同區域上線的文字描述與Keyword.</li>
+<li>開發的花費＆收入.</li>
+<li>輸出可以點擊的Prototype到其他裝有AppTasker的裝置上.</li>
+</ul>
+
+
+<p>不過AppCooker要價不便宜, 大概1190.NT (39.99鎂 <a href="http://www.appcooker.com">AppCooker.com</a></p>
+
+<h2>Git-flow</h2>
+
+<p>大家可以直接參考Aaron Huang的<a href="http://blog.buginception.com/blog/2012/10/13/recap-git-branching-model/">成功的 Git 分支模式</a></p>
+
+<h2>Resizer</h2>
+
+<p><img src="http://a4.mzstatic.com/us/r1000/078/Purple/v4/4a/70/27/4a702771-ecc7-273a-bfab-383e3c6fc388/Icon.175x175-75.png"> <a href="https://itunes.apple.com/us/app/resizer/id411277085?mt=12">itunes</a><br/>
+將 Retina 使用的圖檔快速且完美地產生普通螢幕的圖檔尺寸(ex: iPad2 or iPhone3Gs)。</p>
+]]></content>
+  </entry>
+  
+</feed>
