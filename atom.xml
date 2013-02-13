@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-01-26T16:17:58+08:00</updated>
+  <updated>2013-02-13T16:24:18+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,56 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[2013年度目標]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao/"/>
+    <updated>2013-02-13T15:52:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao</id>
+    <content type="html"><![CDATA[<blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote>
+
+
+<!-- more -->
+
+
+<p>今年比去年可能會些許的改變, 過多跟過高的目標能落實並去確實追求的機會太容易因為難度過高沒辦法達成, 這次定的會降低一點, 並且依工作、個人、生活三個方面去設立目標.</p>
+
+<h2>工作</h2>
+
+<ul>
+<li>Android Develop</li>
+<li>Web前端 (Front End.)</li>
+<li>Ruby on Rails</li>
+</ul>
+
+
+<p>今年工作方面除了本身的iOS外, 最重要的應該是Android開發的學習, 接下來Front End.跟RoR是自己打算學習的目標.</p>
+
+<h2>個人</h2>
+
+<ul>
+<li>讀書會開滿十場</li>
+<li>部落格10篇技術分享文</li>
+<li>github提交3個開源程式碼</li>
+</ul>
+
+
+<p>讀書會部分是由我跟<a href="http://patw.idv.tw/">Patrick Wang</a>一起發起的讀書會, 主要是分享工作上的學習心得跟技術分享, 期待之後也可以把讀書會的內容分享出來.</p>
+
+<h2>生活</h2>
+
+<ul>
+<li>帶柳丁出去玩+多陪陪家人</li>
+<li>把烏克麗麗練好</li>
+<li>跟朋友間安排活動出遊或交流</li>
+</ul>
+
+
+<p>上面是今年主要的目標啦, 當然還有些小目標像是多參加一些聚會充實知識跟各方面, 不過可能比較瑣碎就不多列出來了.</p>
+
+<p>最後最後, 加油!</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[iOS開發Memo(0)]]></title>
