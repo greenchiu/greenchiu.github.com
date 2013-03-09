@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-02-13T16:25:52+08:00</updated>
+  <updated>2013-03-09T23:03:49+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,52 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[建立Resource Bundle]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/"/>
+    <updated>2013-02-28T21:59:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/bundle_image.png"></p>
+
+<blockquote><p>本篇介紹如合製作Resoure Bundle</p></blockquote>
+
+
+<p></p>
+
+<!--more-->
+
+
+<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bunlde(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
+
+<p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
+<img src="http://greenchiu.github.com/images/bundles/bundle_01.png"></p>
+
+<p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
+<img src="http://greenchiu.github.com/images/bundles/bundle_02.png"></p>
+
+<p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
+<img src="http://greenchiu.github.com/images/bundles/bundle_03.png"></p>
+
+<p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
+<img src="http://greenchiu.github.com/images/bundles/bundle_04.png"></p>
+
+<p>加入你的檔案 <br/>
+<img src="http://greenchiu.github.com/images/bundles/bundle_05.png"></p>
+
+<p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
+<img src="http://greenchiu.github.com/images/bundles/bundle_06.png"></p>
+
+<p>最後使用bundle內部圖片</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;appAssets.bundle/images/blue_arrow.png&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[2013年度目標]]></title>

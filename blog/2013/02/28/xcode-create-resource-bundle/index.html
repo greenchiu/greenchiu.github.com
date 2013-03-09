@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Green</title>
+  <title>建立Resource Bundle - Green</title>
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content=" 本篇介紹如合製作Resoure Bundle ">
+  <meta name="description" content="本篇介紹如合製作Resoure Bundle 開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bunlde(Apple文件上稱為loadable bundles)檔案。上網查詢了一下 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://greenchiu.github.com/">
+  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,15 +75,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a></h1>
+      <h1 class="entry-title">建立Resource Bundle</h1>
     
     
       <p class="meta">
@@ -106,76 +103,55 @@
   </header>
 
 
-  <div class="entry-content"><p><img src="/images/bundle_image.png"></p>
+<div class="entry-content"><p><img src="/images/bundle_image.png"></p>
 
 <blockquote><p>本篇介紹如合製作Resoure Bundle</p></blockquote>
 
 
 <p></p>
 
+<!--more-->
+
+
+<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bunlde(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
+
+<p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
+<img src="/images/bundles/bundle_01.png"></p>
+
+<p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
+<img src="/images/bundles/bundle_02.png"></p>
+
+<p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
+<img src="/images/bundles/bundle_03.png"></p>
+
+<p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
+<img src="/images/bundles/bundle_04.png"></p>
+
+<p>加入你的檔案 <br/>
+<img src="/images/bundles/bundle_05.png"></p>
+
+<p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
+<img src="/images/bundles/bundle_06.png"></p>
+
+<p>最後使用bundle內部圖片</p>
+
+<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;appAssets.bundle/images/blue_arrow.png&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/28/xcode-create-resource-bundle/">Read on &rarr;</a>
-    </footer>
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/2013nian-du-mu-biao/">2013年度目標</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
 
-<time datetime="2013-02-13T15:52:00+08:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/13/2013nian-du-mu-biao/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/01/26/ioskai-fa-xiao-xin-de/">iOS開發Memo(0)</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -187,164 +163,48 @@
   
 
 
-<time datetime="2013-01-26T15:01:00+08:00" pubdate data-updated="true">Jan 26<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>在專案改組跟新專案的切換告一段落之後，終於又有時間繼續來更新了，順便把最近在專案上使用的工具稍微記錄一下。</p></blockquote>
-
-
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/01/26/ioskai-fa-xiao-xin-de/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-02-28T21:59:00+08:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/">學徒模式-讀書心得</a></h1>
-    
-    
-      <p class="meta">
-        
 
-
-
-
-
-
-
-
+<span class="categories">
   
+    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</span>
 
 
-<time datetime="2012-11-17T17:06:00+08:00" pubdate data-updated="true">Nov 17<span>th</span>, 2012</time>
-        
-      </p>
+    </p>
     
-  </header>
-
-
-  <div class="entry-content"><p><img src="/images/IMG_2682.jpg" width="400"></p>
-
-<blockquote><p>問題不在於征服一個未知的問題，而是一步一步，走出全新的路徑。</p><footer><strong>Gustav Mahler</strong> <cite>音樂家與作曲家</cite></footer></blockquote>
-
-
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/" data-via="" data-counturl="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/11/ding-ge-mu-biao/">定個目標</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-11T19:22:00+08:00" pubdate data-updated="true">Nov 11<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="/images/IMG_2652.jpg" width="400"></p>
-
-<blockquote><p>在經過一段有點走入死胡同的時間後, 也開始決定逼迫自己來做一些事情; 可能我這個人就是欠扁吧 … 不給自己一些壓力就會一直死拖活拖的往後延, 因此決定為自己設定一些目標/方式, 讓自己有一個努力的方向或是強制的學習.</p></blockquote>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/11/ding-ge-mu-biao/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
+        <a class="basic-alignment left" href="/blog/2013/02/13/2013nian-du-mu-biao/" title="Previous Post: 2013年度目標">&laquo; 2013年度目標</a>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2012/11/10/hello-world/">Hello World.</a></h1>
-    
-    
-      <p class="meta">
-        
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-10T11:55:00+08:00" pubdate data-updated="true">Nov 10<span>th</span>, 2012</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Hi,  部落格在經過好長一段時間的起起伏伏後, 終於決定搬到page.github.com來, 在上一個<a href="http://greenchiou.blogstop.tw">部落格</a>當初有好常一段的時間沒有進行更新跟維護, 這算是個人的失職<del>絕對不是下班後打LoL打太兇關係</del>.</p>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2012/11/10/hello-world/">Read on &rarr;</a>
-    </footer>
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -394,6 +254,7 @@
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -408,7 +269,10 @@
       var disqus_shortname = 'greenchiu';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/';
+        var disqus_url = 'http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
