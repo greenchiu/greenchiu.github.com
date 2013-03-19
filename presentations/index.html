@@ -9,7 +9,7 @@
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content="Presentations Tweet 2013年 2013/03 Sass+Compass介紹 <!-- Tweet --> Recent Posts 建立Resource Bundle 2013年度目標 iOS開發Memo(0) 學徒模式-讀書心得 定個目標 Hello world. &hellip;">
+  <meta name="description" content="Presentations Tweet 2013年 2013/03 Sass+Compass介紹 <!-- Tweet --> Recent Posts 我在github的第一個Repo-GCTagList 建立Resource Bundle 2013年度目標 iOS開發Memo(0) 學徒模式 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -84,7 +84,7 @@
     
     <!-- -->
     
-      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/presentations/index.html" data-via="" data-counturl="http://greenchiu.github.com/presentations/index.html" >Tweet</a>
+      <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/presentations/index.html" data-via="greenchiu" data-counturl="http://greenchiu.github.com/presentations/index.html" >Tweet</a>
       
       
       <div class="g-plusone" data-size="medium"></div>
@@ -108,7 +108,7 @@
       <!--
         <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/presentations/index.html" data-via="" data-counturl="http://greenchiu.github.com/presentations/index.html" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/presentations/index.html" data-via="greenchiu" data-counturl="http://greenchiu.github.com/presentations/index.html" >Tweet</a>
   
   
   <div class="g-plusone" data-size="medium"></div>
@@ -130,6 +130,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a>
@@ -159,8 +163,26 @@
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (1)</a></li><li><a href='/blog/categories/ios'>iOS (2)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (2)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (2)</a></li><li><a href='/blog/categories/ios'>iOS (3)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (3)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
 </section>
+
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("greenchiu", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/greenchiu" class="twitter-follow-button" data-show-count="false">Follow @greenchiu</a>
+  
+</section>
+
 <section>
   <h1>Links</h1>
   <ul>

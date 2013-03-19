@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoa | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/cocoa/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-03-15T22:23:13+08:00</updated>
+  <updated>2013-03-19T21:06:59+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,108 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[我在github的第一個Repo-GCTagList]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
+    <updated>2013-03-19T19:56:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
+    <content type="html"><![CDATA[<p><blockquote><p><br/><br/>在訂完今年的年度目標後, 除了正在並行的讀書會之外, 另一個就是在github上提交自己的lib; GCTagList 雖然內容很粗糙, 不過也算踏出了第一步, 希望之後會越來越好。 <br/></p></blockquote></p>
+
+<!--more-->
+
+
+<p>關於TagList, 一開始是因為專案上有這個需求, 希望可以像iPhone的Mail App的收件者或寄件者的tag list樣式; 不過在網路上找的lib大部分都要調整, 在維護上個人覺得不太方便, 加上專案之後要給別人維護, 如果這一塊寫的很醜之後很煩, 所以想了想就抓了一個來參考, 在依照需求來做設計, 整理出來就是GCTagList。</p>
+
+<h2>GCTagList</h2>
+
+<p>模仿iPhone's Mail App中所呈現的tag list樣式</p>
+
+<h3>特點</h3>
+
+<p>taglist有幾個比較特殊的地方, 分別是:</p>
+
+<h4>第一行支援LeftMargin</h4>
+
+<p>主要是解決如果再Taglist前面會需要文字的話, 不會因為需要配合文字就限制住Taglist的寬度。</p>
+
+<h4>最大行數</h4>
+
+<p>當內容很多的時候, 可能因為list內的Taglabel過多造成行數過多(高度過高), 需要讓user一直捲動影響到App的操作。</p>
+
+<h4>自動調整高度</h4>
+
+<p>這就不多解釋了, 就是拿來Resize用 ...</p>
+
+<h4>ARC</h4>
+
+<p>然後就是最近比較常使用的arc, 因為這次的專案支援arc, 所以是以arc為出發點在處理沒有支援arc的專案。</p>
+
+<p>然後GCTagList一些想法是平時觀察UITableView的心得, 自己所做的一些實作, 所以Reuse跟identifire等東西相信有注意到的人應該都不陌生。(命名的方式也有一些雷同)</p>
+
+<h3>使用方式</h3>
+
+<p>在專案需要加入 <code>QuartzCore.frame</code>, 並加入 class &amp; assets的resoure bundle。</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>add taglist to your view </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">GCTagList</span><span class="o">*</span> <span class="n">taglist</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GCTagList</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">200</span><span class="p">)];</span>
+</span><span class='line'><span class="n">taglist</span><span class="p">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview:</span><span class="n">taglist</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>接著主要實作GCTagListDataSource的2個Mehtod
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>implemention GCTagListDataSource require method </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">numberOfTagLabelInTagList:</span><span class="p">(</span><span class="n">GCTagList</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">tagList</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">GCTagLabel</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">tagList:</span><span class="p">(</span><span class="n">GCTagList</span> <span class="o">*</span><span class="p">)</span><span class="nv">tagList</span> <span class="nf">tagLabelAtIndex:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+最後再呼叫CGTagList的<code>reloadData</code>。
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>let your tagist reloadData </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">taglist</span> <span class="n">reloadData</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在與taglist的互動方面, 我也設計了2個方式點擊方式</p>
+
+<ul>
+<li>點擊TagLabel</li>
+<li>點擊TagLabel's accessoryButton</li>
+</ul>
+
+
+<p>可以在GCTagListDelegate找到對應的使用方式。</p>
+
+<h3>後續的調整</h3>
+
+<ul>
+<li>區段性reload、insert和delete (嗯…就是要學)</li>
+<li>客製化AccessoryButton</li>
+<li>Taglist顏色的調整 … 是否要使用漸層等等</li>
+</ul>
+
+
+<p>目前想到的也就這些吧 … 有想法的可以一起討論一下</p>
+
+<h3>Reference</h3>
+
+<ul>
+<li><a href="https://github.com/domness/DWTagList">DWTagList</a></li>
+</ul>
+
+
+<h2>之後</h2>
+
+<p>有個小小的想法, 就是把他放到<a href="http://www.cocoacontrols.com/">cocoacontrols</a>跟<a href="http://cocoapods.org/">cocoapods</a>上 XD, 希望不會寫的太爛被打臉阿~</p>
+
+<p>也要感謝一下馬克(我現在的PM)跟Eikiy(專案合作的創意)以及Jeremy(公司的大Boss), 給了很多的概念跟支援, 才會有這個lib的誕生.</p>
+
+<p>最後附上github repo:<a href="https://github.com/greenchiu/GCTagList">GCTagList</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[建立Resource Bundle]]></title>
@@ -24,7 +126,7 @@
 <!--more-->
 
 
-<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bunlde(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
+<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
 
 <p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
 <img src="/images/bundles/bundle_01.png"></p>
