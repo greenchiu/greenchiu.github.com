@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-C | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-03-31T16:06:16+08:00</updated>
+  <updated>2013-03-31T16:21:50+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -49,7 +49,36 @@
 - (UIView*)inputView;
 - (UIView*)inputAccessoryView;
 </code>
-在iPhone開發中, 如果要在UIViewController呼叫出UIPickerView, 會先override上面第一跟第二個method, 讓Controller本身可以成為<code>FirstResponder</code>, 及成為FirstResponder時會呈現的<code>inputView</code>; 如果有需要一個ControlBar去控制inputView的話, 就覆寫<code>inputAccessoryView</code>。</p>
+在iPhone開發中, 如果要在UIViewController呼叫出UIPickerView, 會需要override <code>canBecomeFirstResponder</code> 跟 <code>inputView</code></p>
+
+<p>``` objc @ViewController Require to override
+// UIViewController default is NO.
+- (BOOL)canBecomeFirstResponder {</p>
+
+<pre><code>return YES; 
+</code></pre>
+
+<p>}</p>
+
+<ul>
+<li>(UIView*) inputView {
+  return [[UIPickerView alloc] init];
+}
+```</li>
+</ul>
+
+
+<p>讓Controller本身可以成為<code>FirstResponder</code>, 及成為FirstResponder時會呈現的<code>inputView</code>;</p>
+
+<p>如果有需要一個ControlBar去控制inputView的話, 就覆寫<code>inputAccessoryView</code>
+``` objc add a toolbar for inputView
+- (UIView*) inputAccessoryView {</p>
+
+<pre><code>return [[UIToolbar alloc] init];
+</code></pre>
+
+<p>}
+```</p>
 
 <h2>UITextField &amp; UITextView</h2>
 
@@ -63,9 +92,9 @@ textField.inputView = {your inputView};
 textField.inputAccessoryView = {your inputAccessoryView};
 </code></p>
 
-<p>特別一提的是, 如果你預設使用Keyboard(沒有設定inputView),並且設定inputAccessoryView的時候;觀察UIKeyboardWillShowNotication的通知, 系統會自動把inputAccessoryView的高度自動加上去...(一開始沒注意到害我自己debug半天找不到錯在哪)</p>
+<p>特別一提的是, 如果你預設使用Keyboard(沒有設定inputView),並且設定inputAccessoryView的時候;觀察UIKeyboardWillShowNotication…etc.的通知, 系統會自動把inputAccessoryView的高度自動加上去...(一開始沒注意到害我自己debug半天找不到錯在哪)</p>
 
-<p>用這樣的方式, 就可以輕鬆的去處理需要多個輸入但是要不同的inputView的狀況了。</p>
+<p>用這樣的方式, 就可以輕鬆的去處理需要多個輸入但是要不同的inputView的狀況。</p>
 ]]></content>
   </entry>
   

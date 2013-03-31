@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-03-31T16:06:16+08:00</updated>
+  <updated>2013-03-31T16:21:50+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -56,7 +56,39 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>在iPhone開發中, 如果要在UIViewController呼叫出UIPickerView, 會先override上面第一跟第二個method, 讓Controller本身可以成為<code>FirstResponder</code>, 及成為FirstResponder時會呈現的<code>inputView</code>; 如果有需要一個ControlBar去控制inputView的話, 就覆寫<code>inputAccessoryView</code>。</p>
+<p>在iPhone開發中, 如果要在UIViewController呼叫出UIPickerView, 會需要override <code>canBecomeFirstResponder</code> 跟 <code>inputView</code></p>
+
+<figure class='code'><figcaption><span>@ViewController Require to override </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// UIViewController default is NO.</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">canBecomeFirstResponder</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">UIView</span><span class="o">*</span><span class="p">)</span> <span class="nf">inputView</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[[</span><span class="n">UIPickerView</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>讓Controller本身可以成為<code>FirstResponder</code>, 及成為FirstResponder時會呈現的<code>inputView</code>;</p>
+
+<p>如果有需要一個ControlBar去控制inputView的話, 就覆寫<code>inputAccessoryView</code></p>
+
+<figure class='code'><figcaption><span>add a toolbar for inputView</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">UIView</span><span class="o">*</span><span class="p">)</span> <span class="nf">inputAccessoryView</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">return</span> <span class="p">[[</span><span class="n">UIToolbar</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
 
 <h2>UITextField &amp; UITextView</h2>
 
@@ -73,9 +105,9 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p>特別一提的是, 如果你預設使用Keyboard(沒有設定inputView),並且設定inputAccessoryView的時候;觀察UIKeyboardWillShowNotication的通知, 系統會自動把inputAccessoryView的高度自動加上去&#8230;(一開始沒注意到害我自己debug半天找不到錯在哪)</p>
+<p>特別一提的是, 如果你預設使用Keyboard(沒有設定inputView),並且設定inputAccessoryView的時候;觀察UIKeyboardWillShowNotication…etc.的通知, 系統會自動把inputAccessoryView的高度自動加上去&#8230;(一開始沒注意到害我自己debug半天找不到錯在哪)</p>
 
-<p>用這樣的方式, 就可以輕鬆的去處理需要多個輸入但是要不同的inputView的狀況了。</p>
+<p>用這樣的方式, 就可以輕鬆的去處理需要多個輸入但是要不同的inputView的狀況。</p>
 ]]></content>
   </entry>
   
