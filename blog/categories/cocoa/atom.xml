@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoa | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/cocoa/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-04-02T23:29:48+08:00</updated>
+  <updated>2013-04-09T20:52:11+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -210,8 +210,6 @@ textField.inputAccessoryView = {your inputAccessoryView};
 
 
 <p>我是使用github的方式, 將你的lib URL丟給它後它會抓一些基本的資訊, 然後會需要填一些內容&amp;keyword (for cocoacontrols search); 提交之後要等待審核(?, 會需要一段時間, 我大該排了一個禮拜吧, 如果沒問題它就會直接出現在cocoacontrol裡面啦~</p>
-
-<p><p class='info info' data-title='CocoaControls'>Link : http://www.cocoacontrols.com/controls/gctaglist</p></p>
 
 <p>今天下午也嘗試了提交到cocoapods, 不過不知道自己做的正不正確 … (Orz, 英文太破) … 如果有提交成功, 再來補充囉。</p>
 

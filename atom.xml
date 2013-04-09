@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-04-02T23:29:48+08:00</updated>
+  <updated>2013-04-09T20:52:11+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,130 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[CocoaPods提交初體驗]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/"/>
+    <updated>2013-04-09T19:44:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/blog/120409/01.png"></p>
+
+<blockquote><p>距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~</p></blockquote>
+
+
+<p></p>
+
+<!--more-->
+
+
+<h2>CocoaPods</h2>
+
+<p>CocoaPods是一個管理Objective-C專案的thrid library的工具; 在專案內更新lib不用在使用手動的方式來更新使用的libs, 也可以指定使用lib的版本; 現在已經進步到更新<code>Podfile</code> XCode不用在重新開啟workspace了~</p>
+
+<h2>建立一個Spec for CocoaPods</h2>
+
+<p>依照CocoaPods上的解說, 有幾個步驟:</p>
+
+<ul>
+<li>你必須要建立一個的Spec檔案<code>{lib_name}.podspec</code></li>
+<li>編輯spec檔案</li>
+<li>檢查spec檔案是否正確</li>
+<li>spec無誤後, 在 CocoaPods/Specs 加入spec檔案, 送出Pull Request的申請</li>
+</ul>
+
+
+<p>如果沒問題的話, 收到merge的通知就表示你可以在cocoapods上查找你的lib啦, 那麼我們快速的看一下如何製作一個Spec for CocoaPods。</p>
+
+<p>先使用Command line來建立Spec檔案(推薦iTerm2)</p>
+
+<figure class='code'><figcaption><span>建立podspec </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec create GCTagList</span></code></pre></td></tr></table></div></figure>
+
+
+<p>建立之後, 在資料夾中會出現一個<code>GCTagList.podspec</code> <br/>
+<img src="http://greenchiu.github.com/images/blog/120409/02.png"> <br/>
+接著編輯spec (依照習慣, 我個人習慣sublime text 2)</p>
+
+<figure class='code'><figcaption><span>編輯Spec </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>         <span class="o">=</span> <span class="s2">&quot;GCTagList&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>      <span class="o">=</span> <span class="s2">&quot;0.1.1&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>      <span class="o">=</span> <span class="s2">&quot;GCTagList like iOS Mail app&#39;s sender or recivers tags.&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">screenshots</span>  <span class="o">=</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList/raw/master/Screenshot.png&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>     <span class="o">=</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>      <span class="o">=</span> <span class="p">{</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;MIT License&#39;</span><span class="p">,</span> <span class="ss">:file</span> <span class="o">=&gt;</span> <span class="s1">&#39;LICENSE&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>       <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;greenchiu&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;handkid1986@gmail.com&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>       <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList.git&quot;</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s2">&quot;0.1.1&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">platform</span>     <span class="o">=</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;5.0&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;GCTagList/classes/GCTagList.{h,m}&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">resource</span>     <span class="o">=</span> <span class="s2">&quot;GCTagList/assets/CGTagLabelList.bundle&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">framework</span>    <span class="o">=</span> <span class="s1">&#39;QuartzCore&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>name</li>
+<li>version</li>
+<li>summary</li>
+<li>homepage</li>
+<li>license</li>
+<li>author</li>
+<li>source</li>
+</ul>
+
+
+<p>以上幾個部分是Spec裡面不能少的, 其他的可以依照你的需求來增加內容 ,更多的詳細資訊在這邊<a href="https://github.com/CocoaPods/CocoaPods/wiki/The-podspec-format">The-podspec-format</a></p>
+
+<p>GCTagList只支援iOS5~6, 在<code>plaform</code>設定成 <code>ios, '5.0'</code>; 另外因為有assets所以在<code>resource</code>要指定assets的路徑, 路徑是依照專案的相對位置(不確定是不是github上的); <code>framework</code>同理, 如果有多個的話使用<code>frameworks</code>然後使用的framework用&#8221;,&#8221;隔開<code>'SystemConfiguration', 'CoreServices'</code> 。</p>
+
+<p>在完成spec檔案後, 在使用指令來檢查spec是否有錯誤</p>
+
+<figure class='code'><figcaption><span>檢查你的Spec </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec lint GCTagList.podspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果沒有錯誤會出現下面的內容 <br/>
+<img src="http://greenchiu.github.com/images/blog/120409/03.png"></p>
+
+<p>接下來,</p>
+
+<ul>
+<li>到<a href="https//github.com/CocoaPods/Specs">CocoaPods/Specs</a> fork一份新的Specs下來，並複製在本機端。(建議在提交前在fork, 避免覆蓋到其他人的內容)</li>
+<li>在Spec建立Library的資料夾, 並將資料夾命名為Library的名稱。</li>
+<li>依照提交的版本建立不同的資料夾, 資料夾命名為版本名稱, 在將Spec檔案放入。</li>
+</ul>
+
+
+<p>完成後的大該像下面這樣 <br/>
+<img src="http://greenchiu.github.com/images/blog/120409/04.png"></p>
+
+<p>在將修改玩的specs commot&amp;pusd到自己的github上, 然後在website點擊pull request來送出請求, 到這邊只要等待通知啦, 基本上spec有檢查的話應該就會直接通過了。 <br/>
+<img src="http://greenchiu.github.com/images/blog/120409/05.png"></p>
+
+<h2>最後</h2>
+
+<p>在確定收到merge完成的通之後, 你可以在commond line更新本機端的spec檔案, 應該就可以搜尋到你的檔案啦~</p>
+
+<p>如果你在使用的library在CocoaPods上找不到的話, 也是可以主動幫他建立一個spec檔, 主動提交上去如果過了就可以使用CocoaPods來管理囉。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[UITextView和UITextField的使用小技巧]]></title>
@@ -234,9 +358,6 @@
 
 
 <p>我是使用github的方式, 將你的lib URL丟給它後它會抓一些基本的資訊, 然後會需要填一些內容&amp;keyword (for cocoacontrols search); 提交之後要等待審核(?, 會需要一段時間, 我大該排了一個禮拜吧, 如果沒問題它就會直接出現在cocoacontrol裡面啦~</p>
-
-<p class='info info' data-title='CocoaControls'>Link : http://www.cocoacontrols.com/controls/gctaglist</p>
-
 
 <p>今天下午也嘗試了提交到cocoapods, 不過不知道自己做的正不正確 … (Orz, 英文太破) … 如果有提交成功, 再來補充囉。</p>
 

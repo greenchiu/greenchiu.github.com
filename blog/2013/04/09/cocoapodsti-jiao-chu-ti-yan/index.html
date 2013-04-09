@@ -1,0 +1,418 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>CocoaPods提交初體驗 - Green</title>
+  <meta name="author" content="Green Chiu">
+
+  
+  <meta name="description" content="距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~ CocoaPods CocoaPods是一個管理Objective-C專案的thrid library的工具; 在專案內更新lib不用在使用手動的方式來更新使用的libs &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36256939-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Green</a></h1>
+  
+    <h2>成為Hacker的路上</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:greenchiu.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about-green/">About</a></li>
+  <li><a href="/presentations/">Presentations</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">CocoaPods提交初體驗</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-09T19:44:00+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/blog/120409/01.png"></p>
+
+<blockquote><p>距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~</p></blockquote>
+
+
+<p></p>
+
+<!--more-->
+
+
+<h2>CocoaPods</h2>
+
+<p>CocoaPods是一個管理Objective-C專案的thrid library的工具; 在專案內更新lib不用在使用手動的方式來更新使用的libs, 也可以指定使用lib的版本; 現在已經進步到更新<code>Podfile</code> XCode不用在重新開啟workspace了~</p>
+
+<h2>建立一個Spec for CocoaPods</h2>
+
+<p>依照CocoaPods上的解說, 有幾個步驟:</p>
+
+<ul>
+<li>你必須要建立一個的Spec檔案<code>{lib_name}.podspec</code></li>
+<li>編輯spec檔案</li>
+<li>檢查spec檔案是否正確</li>
+<li>spec無誤後, 在 CocoaPods/Specs 加入spec檔案, 送出Pull Request的申請</li>
+</ul>
+
+
+<p>如果沒問題的話, 收到merge的通知就表示你可以在cocoapods上查找你的lib啦, 那麼我們快速的看一下如何製作一個Spec for CocoaPods。</p>
+
+<p>先使用Command line來建立Spec檔案(推薦iTerm2)</p>
+
+<figure class='code'><figcaption><span>建立podspec </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec create GCTagList</span></code></pre></td></tr></table></div></figure>
+
+
+<p>建立之後, 在資料夾中會出現一個<code>GCTagList.podspec</code> <br/>
+<img src="/images/blog/120409/02.png"> <br/>
+接著編輯spec (依照習慣, 我個人習慣sublime text 2)</p>
+
+<figure class='code'><figcaption><span>編輯Spec </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="no">Pod</span><span class="o">::</span><span class="no">Spec</span><span class="o">.</span><span class="n">new</span> <span class="k">do</span> <span class="o">|</span><span class="n">s</span><span class="o">|</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">name</span>         <span class="o">=</span> <span class="s2">&quot;GCTagList&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">version</span>      <span class="o">=</span> <span class="s2">&quot;0.1.1&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">summary</span>      <span class="o">=</span> <span class="s2">&quot;GCTagList like iOS Mail app&#39;s sender or recivers tags.&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">screenshots</span>  <span class="o">=</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList/raw/master/Screenshot.png&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">homepage</span>     <span class="o">=</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">license</span>      <span class="o">=</span> <span class="p">{</span> <span class="ss">:type</span> <span class="o">=&gt;</span> <span class="s1">&#39;MIT License&#39;</span><span class="p">,</span> <span class="ss">:file</span> <span class="o">=&gt;</span> <span class="s1">&#39;LICENSE&#39;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">author</span>       <span class="o">=</span> <span class="p">{</span> <span class="s2">&quot;greenchiu&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;handkid1986@gmail.com&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source</span>       <span class="o">=</span> <span class="p">{</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s2">&quot;https://github.com/greenchiu/GCTagList.git&quot;</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s2">&quot;0.1.1&quot;</span> <span class="p">}</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">platform</span>     <span class="o">=</span> <span class="ss">:ios</span><span class="p">,</span> <span class="s1">&#39;5.0&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">source_files</span> <span class="o">=</span> <span class="s1">&#39;GCTagList/classes/GCTagList.{h,m}&#39;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">resource</span>     <span class="o">=</span> <span class="s2">&quot;GCTagList/assets/CGTagLabelList.bundle&quot;</span>
+</span><span class='line'>  <span class="n">s</span><span class="o">.</span><span class="n">framework</span>    <span class="o">=</span> <span class="s1">&#39;QuartzCore&#39;</span>
+</span><span class='line'><span class="k">end</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li>name</li>
+<li>version</li>
+<li>summary</li>
+<li>homepage</li>
+<li>license</li>
+<li>author</li>
+<li>source</li>
+</ul>
+
+
+<p>以上幾個部分是Spec裡面不能少的, 其他的可以依照你的需求來增加內容 ,更多的詳細資訊在這邊<a href="https://github.com/CocoaPods/CocoaPods/wiki/The-podspec-format">The-podspec-format</a></p>
+
+<p>GCTagList只支援iOS5~6, 在<code>plaform</code>設定成 <code>ios, '5.0'</code>; 另外因為有assets所以在<code>resource</code>要指定assets的路徑, 路徑是依照專案的相對位置(不確定是不是github上的); <code>framework</code>同理, 如果有多個的話使用<code>frameworks</code>然後使用的framework用&#8221;,&#8221;隔開<code>'SystemConfiguration', 'CoreServices'</code> 。</p>
+
+<p>在完成spec檔案後, 在使用指令來檢查spec是否有錯誤</p>
+
+<figure class='code'><figcaption><span>檢查你的Spec </span></figcaption>
+<div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>$ pod spec lint GCTagList.podspec</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果沒有錯誤會出現下面的內容 <br/>
+<img src="/images/blog/120409/03.png"></p>
+
+<p>接下來,</p>
+
+<ul>
+<li>到<a href="https//github.com/CocoaPods/Specs">CocoaPods/Specs</a> fork一份新的Specs下來，並複製在本機端。(建議在提交前在fork, 避免覆蓋到其他人的內容)</li>
+<li>在Spec建立Library的資料夾, 並將資料夾命名為Library的名稱。</li>
+<li>依照提交的版本建立不同的資料夾, 資料夾命名為版本名稱, 在將Spec檔案放入。</li>
+</ul>
+
+
+<p>完成後的大該像下面這樣 <br/>
+<img src="/images/blog/120409/04.png"></p>
+
+<p>在將修改玩的specs commot&amp;pusd到自己的github上, 然後在website點擊pull request來送出請求, 到這邊只要等待通知啦, 基本上spec有檢查的話應該就會直接通過了。 <br/>
+<img src="/images/blog/120409/05.png"></p>
+
+<h2>最後</h2>
+
+<p>在確定收到merge完成的通之後, 你可以在commond line更新本機端的spec檔案, 應該就可以搜尋到你的檔案啦~</p>
+
+<p>如果你在使用的library在CocoaPods上找不到的話, 也是可以主動幫他建立一個spec檔, 主動提交上去如果過了就可以使用CocoaPods來管理囉。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-09T19:44:00+08:00" pubdate data-updated="true">Apr 9<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoapods/'>CocoaPods</a>, <a class='category' href='/blog/categories/github/'>Github</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/" data-via="handkid" data-counturl="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/" title="Previous Post: UITextView和UITextField的使用小技巧">&laquo; UITextView和UITextField的使用小技巧</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/13/2013nian-du-mu-biao/">2013年度目標</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (3)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (4)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (5)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Comments</h1>
+  <div id="dsq-recentcomments" class="dsq-widget"><script type="text/javascript" src="http://disqus.com/forums/greenchiu/recent_comments_widget.js?hide_avatars=1&num_items=5"></script></div>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("handkid", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/handkid" class="twitter-follow-button" data-show-count="false">Follow @handkid</a>
+  
+</section>
+
+<section>
+  <h1>Links</h1>
+  <ul>
+    <li><a href="http://blog.buginception.com/" target="_blank">Aaron Huang</a></li>
+    <li><a href="http://patw.idv.tw/blog/" target="_blank">Patrick Wang</a></li>
+    <li><a href="http://grayliao.blogspot.tw/" target="_blank">Gray Liao</a></li>
+    <li><a href="http://blog.eddie.com.tw/" target="_blank">高見龍</a></li>
+    <li><a href="http://www.checkme.tw/wordpress/" target="_blank">Duncan Du</a></li>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Green Chiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'greenchiu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/';
+        var disqus_url = 'http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
