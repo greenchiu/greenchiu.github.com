@@ -1,0 +1,406 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>用NSInvocation來作為object performSelector的替代方案 - Green</title>
+  <meta name="author" content="Green Chiu">
+
+  
+  <meta name="description" content="在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別. can do it this way 1
+2
+3
+4
+5
+6 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36256939-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Green</a></h1>
+  
+    <h2>成為Hacker的路上</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:greenchiu.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about-green/">About</a></li>
+  <li><a href="/presentations/">Presentations</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">用NSInvocation來作為object performSelector的替代方案</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-27T12:47:00+08:00" pubdate data-updated="true">Apr 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
+
+<figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">currentMehtod</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">SEL</span> <span class="n">action2</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">action2:</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">object</span> <span class="nl">performSelector:</span><span class="n">action2</span> <span class="nl">withObject:</span><span class="n">data</span> <span class="nl">afterDelay:</span><span class="mf">1.f</span><span class="p">];</span>
+</span><span class='line'>  <span class="cm">/** …</span>
+</span><span class='line'><span class="cm">  * do somethig after …</span>
+</span><span class='line'><span class="cm">  **/</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
+
+<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
+
+<!--more-->
+
+
+<h2>NSInvocation</h2>
+
+<p>NSInvocation的使用有一個地方要特別注意, invocation不能使用 <code>alloc</code>跟<code>init</code>來建立實體, 只能使用<code>invocationWithMethodSignature:</code>來建立object.</p>
+
+<figure class='code'><figcaption><span>object的method</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">actionInvokeArgument1:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">arg1</span> <span class="nf">arg2:</span><span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="nv">arg2</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;action: arg1 + arg2=%d&quot;</span><span class="p">,</span> <span class="n">arg1</span> <span class="o">+</span> <span class="p">[</span><span class="n">arg2</span> <span class="n">integerValue</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p class='info info' data-title='Argument Type'>使用Invocation, mehtod所帶入的參數也不用都轉成object, int、BOOL…etc.都可以使用</p>
+
+
+<figure class='code'><figcaption><span>建立一個NSInvocation實體</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">SEL</span> <span class="n">mySelector</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">actionInvokeArgument1:arg2:</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSMethodSignature</span><span class="o">*</span> <span class="n">signature1</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">methodSignatureForSelector:</span><span class="n">mySelector</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSInvocation</span> <span class="o">*</span><span class="n">invocation</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSInvocation</span> <span class="nl">invocationWithMethodSignature:</span><span class="n">signature1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我們先使用<code>NSObject</code>的instance mehtod(也可以使用Class mehtod, 依照個人使用習慣), 先取得一個<code>NSMethodSignature</code>物件, 並建立一個NSInvocation.</p>
+
+<p class='info info' data-title='NSMethodSignature'>NSMethodSignature的numberOfArguments最小值是2; 0跟1是給預設的隱藏參數使用(self & _cmd). 從2開始才是method-spec使用.</p>
+
+
+<p>這時取得的invocation只有簡單的method可帶入的argument數量, 在正式調用之前你還需要設定<code>target</code>跟<code>selector</code>.</p>
+
+<figure class='code'><figcaption><span>設定invocation並調用</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setTarget:</span><span class="n">self</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setSelector:</span><span class="n">mySelector</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSInteger</span> <span class="n">arg1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSNumber</span><span class="o">*</span> <span class="n">arg2</span> <span class="o">=</span> <span class="err">@</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setArgument:</span><span class="o">&amp;</span><span class="n">arg1</span> <span class="nl">atIndex:</span><span class="mi">2</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setArgument:</span><span class="o">&amp;</span><span class="n">arg2</span> <span class="nl">atIndex:</span><span class="mi">3</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="n">invoke</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p class='info warning' data-title='Set Arguments'>使用NSInvocation設定參數時, index要從2開始.</p>
+
+
+<p><img src="/images/blog/130427/01.png"></p>
+
+<figure class='code'><figcaption><span>取得回傳值</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSInteger</span> <span class="n">retVal</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">getReturnValue:</span><span class="o">&amp;</span><span class="n">retVal</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span> <span class="n">retVal</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果要延遲的話可以這樣使用</p>
+
+<figure class='code'><figcaption><span>delay invoke</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">invoke</span><span class="p">)</span> <span class="nl">withObject:</span><span class="nb">nil</span> <span class="nl">afterDelay:</span><span class="mi">1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要注意的是, 如果會需要取得回傳值, 可能不適合使用delay的方式~</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-27T12:47:00+08:00" pubdate data-updated="true">Apr 27<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" data-via="handkid" data-counturl="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/" title="Previous Post: CocoaPods提交初體驗">&laquo; CocoaPods提交初體驗</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (4)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (4)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (6)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Comments</h1>
+  <div id="dsq-recentcomments" class="dsq-widget"><script type="text/javascript" src="http://disqus.com/forums/greenchiu/recent_comments_widget.js?hide_avatars=1&num_items=5"></script></div>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("handkid", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/handkid" class="twitter-follow-button" data-show-count="false">Follow @handkid</a>
+  
+</section>
+
+<section>
+  <h1>Links</h1>
+  <ul>
+    <li><a href="http://blog.buginception.com/" target="_blank">Aaron Huang</a></li>
+    <li><a href="http://patw.idv.tw/blog/" target="_blank">Patrick Wang</a></li>
+    <li><a href="http://grayliao.blogspot.tw/" target="_blank">Gray Liao</a></li>
+    <li><a href="http://blog.eddie.com.tw/" target="_blank">高見龍</a></li>
+    <li><a href="http://www.checkme.tw/wordpress/" target="_blank">Duncan Du</a></li>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Green Chiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'greenchiu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/';
+        var disqus_url = 'http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

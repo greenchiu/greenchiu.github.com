@@ -9,7 +9,12 @@
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content=" 距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~ ">
+  <meta name="description" content="在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別. can do it this way 1
+2
+3
+4
+5
+6 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +83,68 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-27T12:47:00+08:00" pubdate data-updated="true">Apr 27<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
+
+<figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">currentMehtod</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">SEL</span> <span class="n">action2</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">action2:</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">object</span> <span class="nl">performSelector:</span><span class="n">action2</span> <span class="nl">withObject:</span><span class="n">data</span> <span class="nl">afterDelay:</span><span class="mf">1.f</span><span class="p">];</span>
+</span><span class='line'>  <span class="cm">/** …</span>
+</span><span class='line'><span class="cm">  * do somethig after …</span>
+</span><span class='line'><span class="cm">  **/</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
+
+<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -262,48 +329,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/13/2013nian-du-mu-biao/">2013年度目標</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T15:52:00+08:00" pubdate data-updated="true">Feb 13<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote>
-
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/13/2013nian-du-mu-biao/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -317,6 +342,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
@@ -334,15 +363,11 @@
         <a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/02/13/2013nian-du-mu-biao/">2013年度目標</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (3)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (4)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (5)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (4)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (4)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (6)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Comments</h1>

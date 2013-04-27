@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-C | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-04-09T20:52:11+08:00</updated>
+  <updated>2013-04-27T15:08:51+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,83 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
+    <updated>2013-04-27T12:47:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
+    <content type="html"><![CDATA[<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
+
+<p>``` objc can do it this way<br/>
+- (void)currentMehtod {</p>
+
+<pre><code>SEL action2 = @selector(action2:);
+[object performSelector:action2 withObject:data afterDelay:1.f];
+/** …
+ * do somethig after …
+ **/
+</code></pre>
+
+<p>}
+```</p>
+
+<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
+
+<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
+
+<!--more-->
+
+
+<h2>NSInvocation</h2>
+
+<p>NSInvocation的使用有一個地方要特別注意, invocation不能使用 <code>alloc</code>跟<code>init</code>來建立實體, 只能使用<code>invocationWithMethodSignature:</code>來建立object.</p>
+
+<p>```objc object的method
+- (void)actionInvokeArgument1:(NSInteger)arg1 arg2:(NSNumber *)arg2 {</p>
+
+<pre><code>NSLog(@"action: arg1 + arg2=%d", arg1 + [arg2 integerValue]);
+</code></pre>
+
+<p>}
+<code>
+<p class='info info' data-title='Argument Type'>使用Invocation, mehtod所帶入的參數也不用都轉成object, int、BOOL…etc.都可以使用</p>
+</code> objc 建立一個NSInvocation實體
+SEL mySelector = @selector(actionInvokeArgument1:arg2:);
+NSMethodSignature<em> signature1 = [self methodSignatureForSelector:mySelector];
+NSInvocation </em>invocation = [NSInvocation invocationWithMethodSignature:signature1];
+```</p>
+
+<p>我們先使用<code>NSObject</code>的instance mehtod(也可以使用Class mehtod, 依照個人使用習慣), 先取得一個<code>NSMethodSignature</code>物件, 並建立一個NSInvocation.</p>
+
+<p><p class='info info' data-title='NSMethodSignature'>NSMethodSignature的numberOfArguments最小值是2; 0跟1是給預設的隱藏參數使用(self &amp; _cmd). 從2開始才是method-spec使用.</p></p>
+
+<p>這時取得的invocation只有簡單的method可帶入的argument數量, 在正式調用之前你還需要設定<code>target</code>跟<code>selector</code>.</p>
+
+<p><code>objc 設定invocation並調用
+[invocation setTarget:self];
+[invocation setSelector:mySelector];
+NSInteger arg1 = 1;
+NSNumber* arg2 = @2;
+[invocation setArgument:&amp;arg1 atIndex:2];
+[invocation setArgument:&amp;arg2 atIndex:3];
+[invocation invoke];
+</code><br/>
+<p class='info warning' data-title='Set Arguments'>使用NSInvocation設定參數時, index要從2開始.</p>
+<img src="/images/blog/130427/01.png"></p>
+
+<p><code>objc 取得回傳值
+NSInteger retVal;
+[invocation getReturnValue:&amp;retVal];
+NSLog(@"%d", retVal);
+</code>
+如果要延遲的話可以這樣使用
+<code>objc delay invoke
+[invocation performSelector:@selector(invoke) withObject:nil afterDelay:1];
+</code>
+要注意的是, 如果會需要取得回傳值, 可能不適合使用delay的方式~</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CocoaPods提交初體驗]]></title>
@@ -370,50 +447,6 @@ textField.inputAccessoryView = {your inputAccessoryView};
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS開發Memo(0)]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de/"/>
-    <updated>2013-01-26T15:01:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de</id>
-    <content type="html"><![CDATA[<p><blockquote><p>在專案改組跟新專案的切換告一段落之後，終於又有時間繼續來更新了，順便把最近在專案上使用的工具稍微記錄一下。</p></blockquote></p>
-
-<!--more-->
-
-
-<h2>CocoaPods</h2>
-
-<p>最近很紅用來管理Objective-C Project的第三方library工具, 主要是使用Ruby來進行安裝. 安裝使用的方式請參考官網<a href="http://cocoapods.org">Reference</a><br/>
-OS X Mountain Lion無法安裝的排除方式: <a href="http://www.zlu.me/blog/2012/02/21/install-native-ruby-gem-in-mountain-lion-preview/">Install Native Ruby Gem in Mountain Lion Preview</a></p>
-
-<h2>AppCooker + AppTasker</h2>
-
-<p><img src="http://www.appcooker.com/wp-content/uploads/2012/09/App-Cooker-Header-Logo.png"></p>
-
-<p>AppCooker是一個一個專門用來設計iOS App的Mockup or wireframe的工具.<br/>
-主要的功能可以分成:</p>
-
-<ul>
-<li>Icon的紀錄 (不同版本).</li>
-<li>App's Mockup or wireframe.</li>
-<li>在不同區域上線的文字描述與Keyword.</li>
-<li>開發的花費＆收入.</li>
-<li>輸出可以點擊的Prototype到其他裝有AppTasker的裝置上.</li>
-</ul>
-
-
-<p>不過AppCooker要價不便宜, 大概1190.NT (39.99鎂 <a href="http://www.appcooker.com">AppCooker.com</a></p>
-
-<h2>Git-flow</h2>
-
-<p>大家可以直接參考Aaron Huang的<a href="http://blog.buginception.com/blog/2012/10/13/recap-git-branching-model/">成功的 Git 分支模式</a></p>
-
-<h2>Resizer</h2>
-
-<p><img src="http://a4.mzstatic.com/us/r1000/078/Purple/v4/4a/70/27/4a702771-ecc7-273a-bfab-383e3c6fc388/Icon.175x175-75.png"> <a href="https://itunes.apple.com/us/app/resizer/id411277085?mt=12">itunes</a><br/>
-將 Retina 使用的圖檔快速且完美地產生普通螢幕的圖檔尺寸(ex: iPad2 or iPhone3Gs)。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-04-09T20:52:11+08:00</updated>
+  <updated>2013-04-27T15:08:51+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,113 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
+    <updated>2013-04-27T12:47:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
+    <content type="html"><![CDATA[<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
+
+<figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">currentMehtod</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">SEL</span> <span class="n">action2</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">action2:</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">object</span> <span class="nl">performSelector:</span><span class="n">action2</span> <span class="nl">withObject:</span><span class="n">data</span> <span class="nl">afterDelay:</span><span class="mf">1.f</span><span class="p">];</span>
+</span><span class='line'>  <span class="cm">/** …</span>
+</span><span class='line'><span class="cm">  * do somethig after …</span>
+</span><span class='line'><span class="cm">  **/</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
+
+<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
+
+<!--more-->
+
+
+<h2>NSInvocation</h2>
+
+<p>NSInvocation的使用有一個地方要特別注意, invocation不能使用 <code>alloc</code>跟<code>init</code>來建立實體, 只能使用<code>invocationWithMethodSignature:</code>來建立object.</p>
+
+<figure class='code'><figcaption><span>object的method</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">actionInvokeArgument1:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">arg1</span> <span class="nf">arg2:</span><span class="p">(</span><span class="n">NSNumber</span> <span class="o">*</span><span class="p">)</span><span class="nv">arg2</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;action: arg1 + arg2=%d&quot;</span><span class="p">,</span> <span class="n">arg1</span> <span class="o">+</span> <span class="p">[</span><span class="n">arg2</span> <span class="n">integerValue</span><span class="p">]);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p class='info info' data-title='Argument Type'>使用Invocation, mehtod所帶入的參數也不用都轉成object, int、BOOL…etc.都可以使用</p>
+
+
+<figure class='code'><figcaption><span>建立一個NSInvocation實體</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="kt">SEL</span> <span class="n">mySelector</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">actionInvokeArgument1:arg2:</span><span class="p">);</span>
+</span><span class='line'><span class="n">NSMethodSignature</span><span class="o">*</span> <span class="n">signature1</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span> <span class="nl">methodSignatureForSelector:</span><span class="n">mySelector</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSInvocation</span> <span class="o">*</span><span class="n">invocation</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSInvocation</span> <span class="nl">invocationWithMethodSignature:</span><span class="n">signature1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>我們先使用<code>NSObject</code>的instance mehtod(也可以使用Class mehtod, 依照個人使用習慣), 先取得一個<code>NSMethodSignature</code>物件, 並建立一個NSInvocation.</p>
+
+<p class='info info' data-title='NSMethodSignature'>NSMethodSignature的numberOfArguments最小值是2; 0跟1是給預設的隱藏參數使用(self & _cmd). 從2開始才是method-spec使用.</p>
+
+
+<p>這時取得的invocation只有簡單的method可帶入的argument數量, 在正式調用之前你還需要設定<code>target</code>跟<code>selector</code>.</p>
+
+<figure class='code'><figcaption><span>設定invocation並調用</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setTarget:</span><span class="n">self</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setSelector:</span><span class="n">mySelector</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSInteger</span> <span class="n">arg1</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSNumber</span><span class="o">*</span> <span class="n">arg2</span> <span class="o">=</span> <span class="err">@</span><span class="mi">2</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setArgument:</span><span class="o">&amp;</span><span class="n">arg1</span> <span class="nl">atIndex:</span><span class="mi">2</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">setArgument:</span><span class="o">&amp;</span><span class="n">arg2</span> <span class="nl">atIndex:</span><span class="mi">3</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="n">invoke</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p></p>
+
+<p class='info warning' data-title='Set Arguments'>使用NSInvocation設定參數時, index要從2開始.</p>
+
+
+<p><img src="http://greenchiu.github.com/images/blog/130427/01.png"></p>
+
+<figure class='code'><figcaption><span>取得回傳值</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">NSInteger</span> <span class="n">retVal</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">getReturnValue:</span><span class="o">&amp;</span><span class="n">retVal</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span> <span class="n">retVal</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果要延遲的話可以這樣使用</p>
+
+<figure class='code'><figcaption><span>delay invoke</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">invocation</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">invoke</span><span class="p">)</span> <span class="nl">withObject:</span><span class="nb">nil</span> <span class="nl">afterDelay:</span><span class="mi">1</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>要注意的是, 如果會需要取得回傳值, 可能不適合使用delay的方式~</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[CocoaPods提交初體驗]]></title>
