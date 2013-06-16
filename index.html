@@ -9,12 +9,7 @@
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content="在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別. can do it this way 1
-2
-3
-4
-5
-6 &hellip;">
+  <meta name="description" content="行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉. 行事曆功能主要是使用EventKit.framework; 在EventKit中, 除了行事曆( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -83,6 +78,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">行事曆小記事</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T11:38:00+08:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/blog/130615/130615_01.png"></p>
+
+<blockquote><p>行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉.</p></blockquote>
+
+
+<p></p>
+
+<p>行事曆功能主要是使用<code>EventKit.framework</code>; 在EventKit中, 除了<code>行事曆(Canlendar)</code>外, 同時也包含<code>提醒事項(Reminders)</code>的功能, 在修改/新增會需要使用到<code>EKEventStore</code>來做操作.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -283,52 +326,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-28T21:59:00+08:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="/images/bundle_image.png"></p>
-
-<blockquote><p>本篇介紹如合製作Resoure Bundle</p></blockquote>
-
-
-<p></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/02/28/xcode-create-resource-bundle/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -342,6 +339,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">行事曆小記事</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a>
@@ -359,15 +360,11 @@
         <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/02/28/xcode-create-resource-bundle/">建立Resource Bundle</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (4)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (4)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (6)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (5)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (5)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (7)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Comments</h1>

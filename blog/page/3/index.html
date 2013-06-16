@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>建立Resource Bundle - Green</title>
+  <title>Green</title>
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content="本篇介紹如合製作Resoure Bundle 開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下 &hellip;">
+  <meta name="description" content="Hi, 部落格在經過好長一段時間的起起伏伏後, 終於決定搬到page.github.com來, 在上一個部落格當初有好常一段的時間沒有進行更新跟維護, 這算是個人的失職絕對不是下班後打LoL打太兇關係. ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/">
+  <link rel="canonical" href="http://greenchiu.github.com/blog/page/3/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -76,12 +76,15 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div>
-<article class="hentry" role="article">
+      <div class="blog-index">
   
+  
+  
+    <article>
+      
   <header>
     
-      <h1 class="entry-title">建立Resource Bundle</h1>
+      <h1 class="entry-title"><a href="/blog/2012/11/10/hello-world/">Hello World.</a></h1>
     
     
       <p class="meta">
@@ -97,117 +100,34 @@
   
 
 
-<time datetime="2013-02-28T21:59:00+08:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
+<time datetime="2012-11-10T11:55:00+08:00" pubdate data-updated="true">Nov 10<span>th</span>, 2012</time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><img src="/images/bundle_image.png"></p>
+  <div class="entry-content"><p>Hi,  部落格在經過好長一段時間的起起伏伏後, 終於決定搬到page.github.com來, 在上一個<a href="http://greenchiou.blogspot.tw">部落格</a>當初有好常一段的時間沒有進行更新跟維護, 這算是個人的失職<del>絕對不是下班後打LoL打太兇關係</del>.</p>
 
-<blockquote><p>本篇介紹如合製作Resoure Bundle</p></blockquote>
-
-
-<p></p>
-
-<!--more-->
-
-
-<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
-
-<p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
-<img src="/images/bundles/bundle_01.png"></p>
-
-<p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
-<img src="/images/bundles/bundle_02.png"></p>
-
-<p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
-<img src="/images/bundles/bundle_03.png"></p>
-
-<p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
-<img src="/images/bundles/bundle_04.png"></p>
-
-<p>加入你的檔案 <br/>
-<img src="/images/bundles/bundle_05.png"></p>
-
-<p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
-<img src="/images/bundles/bundle_06.png"></p>
-
-<p>最後使用bundle內部圖片</p>
-
-<figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;appAssets.bundle/images/blue_arrow.png&quot;</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
 </div>
-
-
-  <footer>
-    <p class="meta">
-      
   
-
-<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
-
-      
-
-
-
-
-
-
-
-
+  
+    <footer>
+      <a rel="full-article" href="/blog/2012/11/10/hello-world/">Read on &rarr;</a>
+    </footer>
   
 
 
-<time datetime="2013-02-28T21:59:00+08:00" pubdate data-updated="true">Feb 28<span>th</span>, 2013</time>
-      
-
-<span class="categories">
+    </article>
   
-    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
-  
-</span>
-
-
-    </p>
+  <div class="pagination">
     
-      <div class="sharing">
-  
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/" data-via="handkid" data-counturl="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/" >Tweet</a>
-  
-  
-  <div class="g-plusone" data-size="medium"></div>
-  
-  
-    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
-  
-</div>
-
+    <a href="/blog/archives">Blog Archives</a>
     
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2013/02/13/2013nian-du-mu-biao/" title="Previous Post: 2013年度目標">&laquo; 2013年度目標</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/" title="Next Post: 我在github的第一個Repo-GCTagList">我在github的第一個Repo-GCTagList &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
-
-  <section>
-    <h1>Comments</h1>
-    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <a class="next" href="/blog/page/2/">Newer &rarr;</a>
+    
+  </div>
 </div>
-  </section>
-
-</div>
-
 <aside class="sidebar">
   
     <section>
@@ -248,7 +168,7 @@
 <section>
   <h1>Latest Tweets</h1>
   <ul id="tweets">
-    <li class="loading">Status updating...</li>
+    <li class="loading">Status updating&#8230;</li>
   </ul>
   <script type="text/javascript">
     $.domReady(function(){
@@ -274,7 +194,6 @@
   
 </aside>
 
-
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -289,10 +208,7 @@
       var disqus_shortname = 'greenchiu';
       
         
-        // var disqus_developer = 1;
-        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/';
-        var disqus_url = 'http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/';
-        var disqus_script = 'embed.js';
+        var disqus_script = 'count.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

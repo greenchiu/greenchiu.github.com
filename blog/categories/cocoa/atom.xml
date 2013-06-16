@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoa | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/cocoa/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-04-27T15:08:51+08:00</updated>
+  <updated>2013-06-16T12:31:58+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,398 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[行事曆小記事]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
+    <updated>2013-06-15T11:38:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
+    <content type="html"><![CDATA[<p><img src="/images/blog/130615/130615_01.png">
+<blockquote><p><br/><br/>行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉.</p></blockquote></p>
+
+<p>行事曆功能主要是使用<code>EventKit.framework</code>; 在EventKit中, 除了<code>行事曆(Canlendar)</code>外, 同時也包含<code>提醒事項(Reminders)</code>的功能, 在修改/新增會需要使用到<code>EKEventStore</code>來做操作.</p>
+
+<!--more-->
+
+
+<p>在這篇文章裡主要會介紹到Calendar的部份, Reminder的操作就要請大家自己嘗試了.</p>
+
+<h3>開始之前</h3>
+
+<p>我們主要會用到幾個Class, 分別是:</p>
+
+<ul>
+<li>EKEventStore</li>
+<li>EKCalendar</li>
+<li>EKEvent</li>
+<li>EKAlarm</li>
+</ul>
+
+
+<p>EKEventStore主要是讓我們管理EKCalendar以及EKEvent, <code>EKAlarm</code>是可以在EKEvent中加入提示的鬧鐘.</p>
+
+<h2>EKEventStore</h2>
+
+<p>eventStore在行事曆以及提醒事項的功用是最重要的, 主要是負責建立/刪除/修改行事曆(提醒事項)及事件(EKEvent); 同時也是用來搜尋Event的主要Class.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立EKEventStore Instance </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EKEventStore</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果你是在iOS6, 你至少需要執行一次取得權限的動作</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>iOS6, 取得User的許可 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//EKEventStore request permission method</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">requestAccessToEntityType:</span><span class="p">(</span><span class="n">EKEntityType</span><span class="p">)</span><span class="nv">entityType</span> <span class="nf">completion:</span><span class="p">(</span><span class="n">EKEventStoreRequestAccessCompletionHandler</span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EKEventStore</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// after EKEventStore init., get user permission.</span>
+</span><span class='line'><span class="n">EKEventStoreRequestAccessCompletionHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">BOOL</span> <span class="n">granted</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">){</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="n">granted</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 允許使用 …</span>
+</span><span class='line'>    <span class="c1">// your statement …</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 不允許 …</span>
+</span><span class='line'>    <span class="c1">// other statement … </span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">};</span>
+</span><span class='line'><span class="c1">// 這邊使用EKEntityTypeEvent, 是要存取user iDevice的行事曆; 如果要使用提醒事項就改用EKEntityTypeReminder</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">requestAccessToEntityType:</span><span class="n">EKEntityTypeEvent</span> <span class="nl">completion:</span><span class="n">handler</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>除此之外, 你也可以用EKEventStore的Class Mehtod <code>authorizationStatusForEntityType:</code>來判斷是否要取得允許或其他對應的動作</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>iOS6, 判斷目前的Auth狀態 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKAuthorizationStatus</span> <span class="n">authState</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEventStore</span> <span class="nl">authorizationStatusForEntityType:</span><span class="n">EKEntityTypeEvent</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusAuthorized</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>    <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusAuthorized&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusDenied</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusDenied&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusRestricted</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusRestricted&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusNotDetermined&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>到這邊, 我們已經完成了EKEventStore的設置, 接著就可以直接建立/修改Event or Calendar
+<p class='info warning' data-title='注意'>EKEvent &amp; EKCalendar的實體, 都需要使用EKEventStore來建立實體, 而不是使用method init</p></p>
+
+<h3>加入Event到Calendar</h3>
+
+<p>接著, 我們建立一個Event到Calendar
+<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立EKEvent實體, 並加入default Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">*</span> <span class="n">myEvent</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEvent</span> <span class="nl">eventWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">.</span><span class="n">defaultCalendarForNewEvents</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;該更新部落格了&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">@&quot;Green&#39;s Home.&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">notes</span> <span class="o">=</span> <span class="s">@&quot;這次要寫的內容是關於iOS行事曆的部份, 主要建立一個新的Event還有Calendar&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span> <span class="p">[</span><span class="n">myEvent</span><span class="p">.</span><span class="n">startTime</span> <span class="n">timeIntervalSince1970</span><span class="p">]</span> <span class="o">+</span><span class="mi">3600</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithName:</span><span class="s">@&quot;Asia/Taipei&quot;</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveEvent:</span><span class="n">myEvent</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span>                               <span class="nl">commit:</span><span class="n">YES</span>
+</span><span class='line'>                                 <span class="nl">span:</span><span class="n">EKSpanThisEvent</span>
+</span><span class='line'>                                <span class="nl">error:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;save event success:eId:%@&quot;</span><span class="p">,</span> <span class="n">myEvent</span><span class="p">.</span><span class="n">eventIdentifier</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;save event failure, error:%@&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在上面, 我們使用<code>[EKEvent eventWithEventStore:self.eventStore]</code>來建立一個event, 並且將這個event設定了一些基礎內容(title/ location/ notes …etc.), 並且讓這個事件出現在iDevice的預設行事曆中, 儲存成功的話, 就會在行事曆中出現一個event; 如果你希望之後還可以繼續在你的App內維護這個Event, 你需要把<code>eventIdentifier</code>特別記錄下來,搭配下面的方式取得Event, 這樣之後才有辦法去維護這個Event.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>取得上次建立的Event </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">*</span> <span class="n">event</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">eventWithIdentifier:</span><span class="n">YOUR_EVENT_IDENTIFIER</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h4>為Event加上Alarm</h4>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立EKAlarm並加入Event中 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">myEvent</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEvent</span> <span class="nl">eventWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'><span class="o">/**</span>
+</span><span class='line'> <span class="o">*</span>  <span class="p">...</span>
+</span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">NSInteger</span> <span class="n">sendTime</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]</span> <span class="n">timeIntervalSince1970</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//一小時前</span>
+</span><span class='line'><span class="n">NSDate</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">alarmDate0</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span><span class="n">sendTime</span> <span class="o">-</span> <span class="p">(</span><span class="mi">60</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="mi">60</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">)];</span>
+</span><span class='line'><span class="n">EKAlarm</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">alarm0</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKAlarm</span> <span class="nl">alarmWithAbsoluteDate:</span><span class="n">alarmDate</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//一天前</span>
+</span><span class='line'><span class="n">NSDate</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">alarmDate1</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span><span class="n">sendTime</span> <span class="o">-</span> <span class="p">(</span><span class="mi">60</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="mi">60</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="mi">24</span><span class="p">)];</span>
+</span><span class='line'><span class="n">EKAlarm</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">alarm1</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKAlarm</span> <span class="nl">alarmWithAbsoluteDate:</span><span class="n">alarmDate2</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">myEvent</span><span class="p">.</span><span class="n">alarms</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObjects:</span><span class="n">alarm0</span><span class="p">,</span> <span class="n">alarm1</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">NSError</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveEvent:</span><span class="n">myEvent</span>
+</span><span class='line'><span class="o">/**</span>
+</span><span class='line'> <span class="o">*</span> <span class="p">...</span>
+</span><span class='line'> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;/</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+到這邊, 就是一個有提示功能的行事曆事件的建立方式, 中間一些參數沒有介紹到(ex:參與者), 大家可以自己去試試看.</p>
+
+<h2>為Application建立一個新的Calendar</h2>
+
+<p>接著, 我想把這個事件加入一個自定義的的Calendar, 接著下來我們先建立一個新的Calendar; 在建立Calendar的部份會使用到一個新的class <code>EKSource</code>, 來自EKEventStore's property sources.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立一個Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//step1</span>
+</span><span class='line'><span class="c1">//這邊取得的方式只有在iOS5才能使用, iOS6會另外說明</span>
+</span><span class='line'><span class="n">EKSource</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">theSource</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSArray</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">tempSources</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">.</span><span class="n">sources</span><span class="p">;</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">EKSource</span> <span class="o">*</span><span class="n">source</span> <span class="k">in</span> <span class="n">tempSources</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">sourceType</span> <span class="o">==</span> <span class="n">EKSourceTypeLocal</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">theSource</span> <span class="o">=</span> <span class="n">source</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">break</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//step2</span>
+</span><span class='line'><span class="n">EKCalendar</span> <span class="o">*</span><span class="n">calendar</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">theSource</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">calendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKCalendar</span> <span class="nl">calendarWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'><span class="n">calendar</span><span class="p">.</span><span class="n">CGColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">orangeColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+</span><span class='line'><span class="n">calendar</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;愛合購行事曆&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">calendar</span><span class="p">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">theSource</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error: Local source not available&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//step3</span>
+</span><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveCalendar:</span><span class="n">calendar</span> <span class="nl">commit:</span><span class="n">YES</span> <span class="nl">error:</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="n">error</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="c1">// save your calendar.calendarIdentifier</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span> <span class="k">else</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error saving calendar: %@.&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h3>Step1</h3>
+
+<p>在Step1的步驟, eventStore.sources, 其實可以把它當成calendar groups(例如iCloud's or gmail accounts, gmail在不同的帳號可以建立自己的行事曆), 然後我們取出type=EKSourceTypeLocal來做為我們要使用的source(ps. iOS6比較特別, 後面會有額外的程式修改).</p>
+
+<h3>Step2</h3>
+
+<p>接著我們使用EKCalendar's Class Method <code>calendarWithEventStore:</code>來建立calendar instance, 接著設定calendar的顏色、標題還有我們在Step1取得的source.</p>
+
+<h3>Step3</h3>
+
+<p>最後儲存calendar到iDevice的Database中; 如果成功的話, 記得把calendar.calendarIdentifier記錄下來, 下次只要使用下面的方式就可以直接取得這個calendar.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>取得上次建立的Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKCalendar</span><span class="o">*</span> <span class="n">eventCalendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">calendarWithIdentifier:</span><span class="n">YOUR_CALENDAR_IDENTIFIER</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>之後再行事曆的列表中, 你就可以看到你剛剛建立的Calendar(ex:我剛剛建立的是愛合購行事曆)
+<img src="/images/blog/130615/130615_02.png"></p>
+
+<h3>iOS6中的差異</h3>
+
+<p>接著在iOS6中, 該如何取得可以使用的source, 只要將剛剛Step1中的判斷sourceType(line 6)做一些調整, 如下:</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>@ iOS6, 取得source的調整 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">sourceType</span> <span class="o">==</span> <span class="n">EKSourceTypeCalDAV</span> <span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span><span class="o">&amp;</span><span class="n">amp</span><span class="p">;</span> <span class="p">[</span><span class="n">source</span><span class="p">.</span><span class="n">title</span> <span class="nl">isEqualToString:</span><span class="s">@&quot;iCloud&quot;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果繼續使用EKSourceTypeLocal並不會出現錯誤, 但是就不會出現在列表之中; 另外如果不指定source.title=iCloud的話, 可能會因為沒有權限修改該group(ex:gmail account)而失敗.</p>
+
+<h2>題外話</h2>
+
+<p>最近總想著改變一些記錄的方式, 不過有一點不得其門而入, 像是該如何把東西些的足夠深入, 內容方面也是比較精簡; 在一些敘述的方法跟內容的考慮上就變得很難拿捏, 該如何調整可能只能慢慢去做嘗試跟改變了, 也很希望有在看的人可以給我一些建議跟方向, 一起討論程式方面也沒有問題, 謝謝.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>

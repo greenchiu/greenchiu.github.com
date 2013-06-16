@@ -1,0 +1,621 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>行事曆小記事 - Green</title>
+  <meta name="author" content="Green Chiu">
+
+  
+  <meta name="description" content="行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉. 行事曆功能主要是使用EventKit.framework; 在EventKit中, 除了行事曆( &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36256939-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Green</a></h1>
+  
+    <h2>成為Hacker的路上</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:greenchiu.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about-green/">About</a></li>
+  <li><a href="/presentations/">Presentations</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">行事曆小記事</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T11:38:00+08:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="/images/blog/130615/130615_01.png"></p>
+
+<blockquote><p>行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉.</p></blockquote>
+
+
+<p></p>
+
+<p>行事曆功能主要是使用<code>EventKit.framework</code>; 在EventKit中, 除了<code>行事曆(Canlendar)</code>外, 同時也包含<code>提醒事項(Reminders)</code>的功能, 在修改/新增會需要使用到<code>EKEventStore</code>來做操作.</p>
+
+<!--more-->
+
+
+<p>在這篇文章裡主要會介紹到Calendar的部份, Reminder的操作就要請大家自己嘗試了.</p>
+
+<h3>開始之前</h3>
+
+<p>我們主要會用到幾個Class, 分別是:</p>
+
+<ul>
+<li>EKEventStore</li>
+<li>EKCalendar</li>
+<li>EKEvent</li>
+<li>EKAlarm</li>
+</ul>
+
+
+<p>EKEventStore主要是讓我們管理EKCalendar以及EKEvent, <code>EKAlarm</code>是可以在EKEvent中加入提示的鬧鐘.</p>
+
+<h2>EKEventStore</h2>
+
+<p>eventStore在行事曆以及提醒事項的功用是最重要的, 主要是負責建立/刪除/修改行事曆(提醒事項)及事件(EKEvent); 同時也是用來搜尋Event的主要Class.</p>
+
+<figure class='code'><figcaption><span>建立EKEventStore Instance </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EKEventStore</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果你是在iOS6, 你至少需要執行一次取得權限的動作</p>
+
+<figure class='code'><figcaption><span>iOS6, 取得User的許可 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//EKEventStore request permission method</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">requestAccessToEntityType:</span><span class="p">(</span><span class="n">EKEntityType</span><span class="p">)</span><span class="nv">entityType</span> <span class="nf">completion:</span><span class="p">(</span><span class="n">EKEventStoreRequestAccessCompletionHandler</span><span class="p">)</span><span class="nv">completion</span><span class="p">;</span>
+</span><span class='line'><span class="c1">//</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="o">=</span> <span class="p">[[</span><span class="n">EKEventStore</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// after EKEventStore init., get user permission.</span>
+</span><span class='line'><span class="n">EKEventStoreRequestAccessCompletionHandler</span> <span class="n">handler</span> <span class="o">=</span> <span class="o">^</span><span class="p">(</span><span class="kt">BOOL</span> <span class="n">granted</span><span class="p">,</span> <span class="n">NSError</span> <span class="o">*</span><span class="n">error</span><span class="p">){</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">granted</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="c1">// 允許使用 …</span>
+</span><span class='line'>        <span class="c1">// your statement …</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// 不允許 …</span>
+</span><span class='line'>      <span class="c1">// other statement … </span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="c1">// 這邊使用EKEntityTypeEvent, 是要存取user iDevice的行事曆; 如果要使用提醒事項就改用EKEntityTypeReminder</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">requestAccessToEntityType:</span><span class="n">EKEntityTypeEvent</span> <span class="nl">completion:</span><span class="n">handler</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>除此之外, 你也可以用EKEventStore的Class Mehtod <code>authorizationStatusForEntityType:</code>來判斷是否要取得允許或其他對應的動作</p>
+
+<figure class='code'><figcaption><span>iOS6, 判斷目前的Auth狀態 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKAuthorizationStatus</span> <span class="n">authState</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEventStore</span> <span class="nl">authorizationStatusForEntityType:</span><span class="n">EKEntityTypeEvent</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusAuthorized</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusAuthorized&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusDenied</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusDenied&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">authState</span> <span class="o">==</span> <span class="n">EKAuthorizationStatusRestricted</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusRestricted&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;EKAuthorizationStatusNotDetermined&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到這邊, 我們已經完成了EKEventStore的設置, 接著就可以直接建立/修改Event or Calendar</p>
+
+<p class='info warning' data-title='注意'>EKEvent & EKCalendar的實體, 都需要使用EKEventStore來建立實體, 而不是使用method init</p>
+
+
+<h3>加入Event到Calendar</h3>
+
+<p>接著, 我們建立一個Event到Calendar</p>
+
+<figure class='code'><figcaption><span>建立EKEvent實體, 並加入default Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">*</span> <span class="n">myEvent</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEvent</span> <span class="nl">eventWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">calendar</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">.</span><span class="n">defaultCalendarForNewEvents</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;該更新部落格了&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">location</span> <span class="o">=</span> <span class="s">@&quot;Green&#39;s Home.&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">notes</span> <span class="o">=</span> <span class="s">@&quot;這次要寫的內容是關於iOS行事曆的部份, 主要建立一個新的Event還有Calendar&quot;</span><span class="p">;</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">startTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">endTime</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span> <span class="p">[</span><span class="n">myEvent</span><span class="p">.</span><span class="n">startTime</span> <span class="n">timeIntervalSince1970</span><span class="p">]</span> <span class="o">+</span><span class="mi">3600</span><span class="p">];</span>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">timeZone</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSTimeZone</span> <span class="nl">timeZoneWithName:</span><span class="s">@&quot;Asia/Taipei&quot;</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveEvent:</span><span class="n">myEvent</span>
+</span><span class='line'>                                 <span class="nl">commit:</span><span class="n">YES</span>
+</span><span class='line'>                                   <span class="nl">span:</span><span class="n">EKSpanThisEvent</span>
+</span><span class='line'>                                  <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">action</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;save event success:eId:%@&quot;</span><span class="p">,</span> <span class="n">myEvent</span><span class="p">.</span><span class="n">eventIdentifier</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;save event failure, error:%@&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在上面, 我們使用<code>[EKEvent eventWithEventStore:self.eventStore]</code>來建立一個event, 並且將這個event設定了一些基礎內容(title/ location/ notes …etc.), 並且讓這個事件出現在iDevice的預設行事曆中, 儲存成功的話, 就會在行事曆中出現一個event; 如果你希望之後還可以繼續在你的App內維護這個Event, 你需要把<code>eventIdentifier</code>特別記錄下來,搭配下面的方式取得Event, 這樣之後才有辦法去維護這個Event.</p>
+
+<figure class='code'><figcaption><span>取得上次建立的Event </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">*</span> <span class="n">event</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">eventWithIdentifier:</span><span class="n">YOUR_EVENT_IDENTIFIER</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h4>為Event加上Alarm</h4>
+
+<figure class='code'><figcaption><span>建立EKAlarm並加入Event中 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKEvent</span><span class="o">*</span> <span class="n">myEvent</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKEvent</span> <span class="nl">eventWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> *  ...</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSInteger</span> <span class="n">sendTime</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSDate</span> <span class="n">date</span><span class="p">]</span> <span class="n">timeIntervalSince1970</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//一小時前</span>
+</span><span class='line'><span class="n">NSDate</span><span class="o">*</span> <span class="n">alarmDate0</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span><span class="n">sendTime</span> <span class="o">-</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">1</span><span class="p">)];</span>
+</span><span class='line'><span class="n">EKAlarm</span><span class="o">*</span> <span class="n">alarm0</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKAlarm</span> <span class="nl">alarmWithAbsoluteDate:</span><span class="n">alarmDate</span><span class="p">];</span>
+</span><span class='line'><span class="c1">//一天前</span>
+</span><span class='line'><span class="n">NSDate</span><span class="o">*</span> <span class="n">alarmDate1</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSDate</span> <span class="nl">dateWithTimeIntervalSince1970:</span><span class="n">sendTime</span> <span class="o">-</span> <span class="p">(</span><span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="p">)];</span>
+</span><span class='line'><span class="n">EKAlarm</span><span class="o">*</span> <span class="n">alarm1</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKAlarm</span> <span class="nl">alarmWithAbsoluteDate:</span><span class="n">alarmDate2</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">myEvent</span><span class="p">.</span><span class="n">alarms</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSArray</span> <span class="nl">arrayWithObjects:</span><span class="n">alarm0</span><span class="p">,</span> <span class="n">alarm1</span><span class="p">,</span> <span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSError</span><span class="o">*</span> <span class="n">error</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">action</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveEvent:</span><span class="n">myEvent</span>
+</span><span class='line'><span class="cm">/** </span>
+</span><span class='line'><span class="cm"> * ...</span>
+</span><span class='line'><span class="cm"> */</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到這邊, 就是一個有提示功能的行事曆事件的建立方式, 中間一些參數沒有介紹到(ex:參與者), 大家可以自己去試試看.</p>
+
+<h2>為Application建立一個新的Calendar</h2>
+
+<p>接著, 我想把這個事件加入一個自定義的的Calendar, 接著下來我們先建立一個新的Calendar; 在建立Calendar的部份會使用到一個新的class <code>EKSource</code>, 來自EKEventStore&#8217;s property sources.</p>
+
+<figure class='code'><figcaption><span>建立一個Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">//step1</span>
+</span><span class='line'><span class="c1">//這邊取得的方式只有在iOS5才能使用, iOS6會另外說明</span>
+</span><span class='line'><span class="n">EKSource</span><span class="o">*</span> <span class="n">theSource</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="n">NSArray</span><span class="o">*</span> <span class="n">tempSources</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">.</span><span class="n">sources</span><span class="p">;</span>
+</span><span class='line'><span class="k">for</span> <span class="p">(</span><span class="n">EKSource</span> <span class="o">*</span><span class="n">source</span> <span class="k">in</span> <span class="n">tempSources</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">sourceType</span> <span class="o">==</span> <span class="n">EKSourceTypeLocal</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="n">theSource</span> <span class="o">=</span> <span class="n">source</span><span class="p">;</span> 
+</span><span class='line'>      <span class="k">break</span><span class="p">;</span>
+</span><span class='line'>      <span class="p">}</span>    
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//step2</span>
+</span><span class='line'><span class="n">EKCalendar</span> <span class="o">*</span><span class="n">calendar</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">theSource</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">calendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">EKCalendar</span> <span class="nl">calendarWithEventStore:</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span><span class="p">];</span>
+</span><span class='line'>  <span class="n">calendar</span><span class="p">.</span><span class="n">CGColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">orangeColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">calendar</span><span class="p">.</span><span class="n">title</span> <span class="o">=</span> <span class="s">@&quot;愛合購行事曆&quot;</span><span class="p">;</span>
+</span><span class='line'>  <span class="n">calendar</span><span class="p">.</span><span class="n">source</span> <span class="o">=</span> <span class="n">theSource</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span> 
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error: Local source not available&quot;</span><span class="p">);</span>
+</span><span class='line'>  <span class="k">return</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">//step3</span>
+</span><span class='line'><span class="n">NSError</span> <span class="o">*</span><span class="n">error</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'><span class="kt">BOOL</span> <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">saveCalendar:</span><span class="n">calendar</span> <span class="nl">commit:</span><span class="n">YES</span> <span class="nl">error:</span><span class="o">&amp;</span><span class="n">error</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="c1">// save your calendar.calendarIdentifier</span>
+</span><span class='line'><span class="p">}</span> <span class="k">else</span> <span class="p">{</span> 
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Error saving calendar: %@.&quot;</span><span class="p">,</span> <span class="n">error</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h3>Step1</h3>
+
+<p>在Step1的步驟, eventStore.sources, 其實可以把它當成calendar groups(例如iCloud&#8217;s or gmail accounts, gmail在不同的帳號可以建立自己的行事曆), 然後我們取出type=EKSourceTypeLocal來做為我們要使用的source(ps. iOS6比較特別, 後面會有額外的程式修改).</p>
+
+<h3>Step2</h3>
+
+<p>接著我們使用EKCalendar&#8217;s Class Method <code>calendarWithEventStore:</code>來建立calendar instance, 接著設定calendar的顏色、標題還有我們在Step1取得的source.</p>
+
+<h3>Step3</h3>
+
+<p>最後儲存calendar到iDevice的Database中; 如果成功的話, 記得把calendar.calendarIdentifier記錄下來, 下次只要使用下面的方式就可以直接取得這個calendar.</p>
+
+<figure class='code'><figcaption><span>取得上次建立的Calendar </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">EKCalendar</span><span class="o">*</span> <span class="n">eventCalendar</span> <span class="o">=</span> <span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">eventStore</span> <span class="nl">calendarWithIdentifier:</span><span class="n">YOUR_CALENDAR_IDENTIFIER</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>之後再行事曆的列表中, 你就可以看到你剛剛建立的Calendar(ex:我剛剛建立的是愛合購行事曆)
+<img src="/images/blog/130615/130615_02.png"></p>
+
+<h3>iOS6中的差異</h3>
+
+<p>接著在iOS6中, 該如何取得可以使用的source, 只要將剛剛Step1中的判斷sourceType(line 6)做一些調整, 如下:</p>
+
+<figure class='code'><figcaption><span>@ iOS6, 取得source的調整 </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">if</span> <span class="p">(</span><span class="n">source</span><span class="p">.</span><span class="n">sourceType</span> <span class="o">==</span> <span class="n">EKSourceTypeCalDAV</span> <span class="o">&amp;&amp;</span> <span class="p">[</span><span class="n">source</span><span class="p">.</span><span class="n">title</span> <span class="nl">isEqualToString:</span><span class="s">@&quot;iCloud&quot;</span><span class="p">])</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果繼續使用EKSourceTypeLocal並不會出現錯誤, 但是就不會出現在列表之中; 另外如果不指定source.title=iCloud的話, 可能會因為沒有權限修改該group(ex:gmail account)而失敗.</p>
+
+<h2>題外話</h2>
+
+<p>最近總想著改變一些記錄的方式, 不過有一點不得其門而入, 像是該如何把東西些的足夠深入, 內容方面也是比較精簡; 在一些敘述的方法跟內容的考慮上就變得很難拿捏, 該如何調整可能只能慢慢去做嘗試跟改變了, 也很希望有在看的人可以給我一些建議跟方向, 一起討論程式方面也沒有問題, 謝謝.</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-06-15T11:38:00+08:00" pubdate data-updated="true">Jun 15<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/" data-via="handkid" data-counturl="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" title="Previous Post: 用NSInvocation來作為object performSelector的替代方案">&laquo; 用NSInvocation來作為object performSelector的替代方案</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">行事曆小記事</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (5)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (5)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (7)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Comments</h1>
+  <div id="dsq-recentcomments" class="dsq-widget"><script type="text/javascript" src="http://disqus.com/forums/greenchiu/recent_comments_widget.js?hide_avatars=1&num_items=5"></script></div>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("handkid", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/handkid" class="twitter-follow-button" data-show-count="false">Follow @handkid</a>
+  
+</section>
+
+<section>
+  <h1>Links</h1>
+  <ul>
+    <li><a href="http://blog.buginception.com/" target="_blank">Aaron Huang</a></li>
+    <li><a href="http://patw.idv.tw/blog/" target="_blank">Patrick Wang</a></li>
+    <li><a href="http://grayliao.blogspot.tw/" target="_blank">Gray Liao</a></li>
+    <li><a href="http://blog.eddie.com.tw/" target="_blank">高見龍</a></li>
+    <li><a href="http://www.checkme.tw/wordpress/" target="_blank">Duncan Du</a></li>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Green Chiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'greenchiu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/';
+        var disqus_url = 'http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
