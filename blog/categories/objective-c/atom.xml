@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Objective-C | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/objective-c/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-07-02T20:59:44+08:00</updated>
+  <updated>2013-07-14T12:28:25+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GCD筆記]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/"/>
+    <updated>2013-07-14T10:48:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji</id>
+    <content type="html"><![CDATA[<p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
+
+<h3>Grand Center Dispatch (GCD)</h3>
+
+<p>那個GCD是什麼呢? 又可以用來作些什麼?</p>
+
+<p>首先GCD是由Apple提供的多執行緒(Multiple Thread)解決方案, 主要是 NSOperationQueue、NSThread的替代方案。在使用GCD的時候, 你需要搭配Block來操作。</p>
+
+<p>使用方式就不多做交代了，網路上有很多更加詳細的介紹<del>(我絕對不承認自己也還在摸索的原因)</del></p>
+
+<h3>Globle Queue vs Create Queue</h3>
+
+<p>globle跟自行create的queue到底有何差異?</p>
+
+<p>在跟鳥大討論的時候, 這個問題一直困擾著我; 我在專案上有次在使用<code>dispatch_get_global_queue</code>來執行我要的內容, 然後發現跑出來的任務時間並不是按照順序來完成的 … 但是改用<code>dispatch_queue_create</code>就解決了我的問題, 當時因為時程上的關係沒有深究, 後來鳥大提供了<a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">stackoverflow的相關問題</a></p>
+
+<p>這邊有提到說<code>dispatch_get_global_queue</code>取得的queue在執行的時候是<code>concurrent</code>, 也就是並發的去執行(並連), 但是執行內容完成的順序會不一樣, 因此就可能會出現我所遇到的狀況; 而<code>dispatch_queue_create</code>取得的queue是<code>serial</code>的, 同時間只會執行一個任務(串連)。</p>
+
+<h3>release or not</h3>
+
+<p>到底要不要release queue, 基本上在<code>dispatch_get_global_queue</code> and <code>dispatch_get_main_queue()</code>, 因為是取得系統的內容, 所以並不用自己去執行<code>dispatch_release</code>, 不過在發佈最低是低於iOS 6, 你就會需要自己去管理你使用到的queue、group … 等GCD物件。</p>
+
+<p>參考來源:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">What is the difference between dispatch_get_global_queue and dispatch_queue_create?</a></li>
+<li><a href="http://stackoverflow.com/questions/12730202/do-you-need-to-release-gcd-queues-under-arc-in-ios-6-0">Do you need to release GCD queues under ARC in iOS 6.0?</a></li>
+<li><a href="http://blog.csdn.net/totogo2010/article/details/8016129">iOS多线程编程之Grand Central Dispatch(GCD)介绍和使用</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1">Apple Document</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[行事曆小記事]]></title>
@@ -676,129 +715,6 @@ textField.inputAccessoryView = {your inputAccessoryView};
 <p>特別一提的是, 如果你預設使用Keyboard(沒有設定inputView),並且設定inputAccessoryView的時候;觀察UIKeyboardWillShowNotication…etc.的通知, 系統會自動把inputAccessoryView的高度自動加上去...(一開始沒注意到害我自己debug半天找不到錯在哪)</p>
 
 <p>用這樣的方式, 就可以輕鬆的去處理需要多個輸入但是要不同的inputView的狀況。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[我在github的第一個Repo-GCTagList]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
-    <updated>2013-03-19T19:56:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
-    <content type="html"><![CDATA[<p><p class='info info' data-title='News'>已經可以在CocoaPods &amp; CocoaControls找到GCTagList<br/>使用上有任何建議或問題可以直接在github上給我建議, 謝謝</p>
-<blockquote><p><br/><br/>在訂完今年的年度目標後, 除了正在並行的讀書會之外, 另一個就是在github上提交自己的lib; GCTagList 雖然內容很粗糙, 不過也算踏出了第一步, 希望之後會越來越好。 <br/></p></blockquote></p>
-
-<!--more-->
-
-
-<p>關於TagList, 一開始是因為專案上有這個需求, 希望可以像iPhone的Mail App的收件者或寄件者的tag list樣式; 不過在網路上找的lib大部分都要調整, 在維護上個人覺得不太方便, 加上專案之後要給別人維護, 如果這一塊寫的很醜之後很煩, 所以想了想就抓了一個來參考, 在依照需求來做設計, 整理出來就是GCTagList。</p>
-
-<h2>GCTagList</h2>
-
-<p>模仿iPhone's Mail App中所呈現的tag list樣式</p>
-
-<h3>特點</h3>
-
-<p>taglist有幾個比較特殊的地方, 分別是:</p>
-
-<h4>第一行支援LeftMargin</h4>
-
-<p>主要是解決如果再Taglist前面會需要文字的話, 不會因為需要配合文字就限制住Taglist的寬度。</p>
-
-<h4>最大行數</h4>
-
-<p>當內容很多的時候, 可能因為list內的Taglabel過多造成行數過多(高度過高), 需要讓user一直捲動影響到App的操作。</p>
-
-<h4>自動調整高度</h4>
-
-<p>這就不多解釋了, 就是拿來Resize用 ...</p>
-
-<h4>ARC</h4>
-
-<p>然後就是最近比較常使用的arc, 因為這次的專案支援arc, 所以是以arc為出發點在處理沒有支援arc的專案。</p>
-
-<p>然後GCTagList一些想法是平時觀察UITableView的心得, 自己所做的一些實作, 所以Reuse跟identifire等東西相信有注意到的人應該都不陌生。(命名的方式也有一些雷同)</p>
-
-<h3>使用方式</h3>
-
-<p>在專案需要加入 <code>QuartzCore.frame</code>, 並加入 class &amp; assets的resoure bundle。</p>
-
-<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>add taglist to your view </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">GCTagList</span><span class="o">*</span> <span class="n">taglist</span> <span class="o">=</span> <span class="p">[[</span><span class="n">GCTagList</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithFrame:</span><span class="n">CGRectMake</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">320</span><span class="p">,</span> <span class="mi">200</span><span class="p">)];</span>
-</span><span class='line'><span class="n">taglist</span><span class="p">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="n">self</span><span class="p">;</span>
-</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">view</span> <span class="nl">addSubview:</span><span class="n">taglist</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>接著主要實作GCTagListDataSource的2個Mehtod
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>implemention GCTagListDataSource require method </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nf">numberOfTagLabelInTagList:</span><span class="p">(</span><span class="n">GCTagList</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nv">tagList</span><span class="p">;</span>
-</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="n">GCTagLabel</span><span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nf">tagList:</span><span class="p">(</span><span class="n">GCTagList</span> <span class="o">*</span><span class="p">)</span><span class="nv">tagList</span> <span class="nf">tagLabelAtIndex:</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">)</span><span class="nv">index</span><span class="p">;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-最後再呼叫CGTagList的<code>reloadData</code>。
-<div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>let your tagist reloadData </span></figcaption>
- <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">taglist</span> <span class="n">reloadData</span><span class="p">];</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>在與taglist的互動方面, 我也設計了2個方式點擊方式</p>
-
-<ul>
-<li>點擊TagLabel</li>
-<li>點擊TagLabel's accessoryButton</li>
-</ul>
-
-
-<p>可以在GCTagListDelegate找到對應的使用方式。</p>
-
-<h3>後續的調整</h3>
-
-<ul>
-<li>區段性reload、insert和delete (嗯…就是要學)</li>
-<li>客製化AccessoryButton</li>
-<li>Taglist顏色的調整 … 是否要使用漸層等等</li>
-</ul>
-
-
-<p>目前想到的也就這些吧 … 有想法的可以一起討論一下</p>
-
-<h3>Reference</h3>
-
-<ul>
-<li><a href="https://github.com/domness/DWTagList">DWTagList</a></li>
-</ul>
-
-
-<h2>之後</h2>
-
-<p>有個小小的想法, 就是把他放到<a href="http://www.cocoacontrols.com/">cocoacontrols</a>跟<a href="http://cocoapods.org/">cocoapods</a>上 XD, 希望不會寫的太爛被打臉阿~</p>
-
-<p>也要感謝一下馬克(我現在的PM)跟Eikiy(專案合作的創意)以及Jeremy(公司的大Boss), 給了很多的概念跟支援, 才會有這個lib的誕生.</p>
-
-<p>最後附上github repo:<a href="https://github.com/greenchiu/GCTagList">GCTagList</a></p>
-
-<h2>最近</h2>
-
-<p>嗯, 小弟我把它丟上cocoacontrols了, 丟上去的方式還挺簡單的, 有兩種方式</p>
-
-<ul>
-<li>github account, 從github上抓取</li>
-<li>其他方式</li>
-</ul>
-
-
-<p>我是使用github的方式, 將你的lib URL丟給它後它會抓一些基本的資訊, 然後會需要填一些內容&amp;keyword (for cocoacontrols search); 提交之後要等待審核(?, 會需要一段時間, 我大該排了一個禮拜吧, 如果沒問題它就會直接出現在cocoacontrol裡面啦~</p>
-
-<p>今天下午也嘗試了提交到cocoapods, 不過不知道自己做的正不正確 … (Orz, 英文太破) … 如果有提交成功, 再來補充囉。</p>
-
-<p>--</p>
-
-<p>最後額外感謝<a href="https://twitter.com/aar0nTw">Aaron Haung</a>, 今天下午跟他詢問Roibbon p的效果該怎麼做, 沒想到他跟我說給我一小時, 我寫個外掛給你~真是揪甘心, 請受小弟一拜~</p>
-
-<p>也附上<a href="https://github.com/aar0nTw/Ribbonp">網址</a>大家有需要可以去抓囉。</p>
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoa | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/cocoa/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-07-02T20:59:44+08:00</updated>
+  <updated>2013-07-14T12:28:25+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GCD筆記]]></title>
+    <link href="http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/"/>
+    <updated>2013-07-14T10:48:00+08:00</updated>
+    <id>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji</id>
+    <content type="html"><![CDATA[<p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
+
+<h3>Grand Center Dispatch (GCD)</h3>
+
+<p>那個GCD是什麼呢? 又可以用來作些什麼?</p>
+
+<p>首先GCD是由Apple提供的多執行緒(Multiple Thread)解決方案, 主要是 NSOperationQueue、NSThread的替代方案。在使用GCD的時候, 你需要搭配Block來操作。</p>
+
+<p>使用方式就不多做交代了，網路上有很多更加詳細的介紹<del>(我絕對不承認自己也還在摸索的原因)</del></p>
+
+<h3>Globle Queue vs Create Queue</h3>
+
+<p>globle跟自行create的queue到底有何差異?</p>
+
+<p>在跟鳥大討論的時候, 這個問題一直困擾著我; 我在專案上有次在使用<code>dispatch_get_global_queue</code>來執行我要的內容, 然後發現跑出來的任務時間並不是按照順序來完成的 … 但是改用<code>dispatch_queue_create</code>就解決了我的問題, 當時因為時程上的關係沒有深究, 後來鳥大提供了<a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">stackoverflow的相關問題</a></p>
+
+<p>這邊有提到說<code>dispatch_get_global_queue</code>取得的queue在執行的時候是<code>concurrent</code>, 也就是並發的去執行(並連), 但是執行內容完成的順序會不一樣, 因此就可能會出現我所遇到的狀況; 而<code>dispatch_queue_create</code>取得的queue是<code>serial</code>的, 同時間只會執行一個任務(串連)。</p>
+
+<h3>release or not</h3>
+
+<p>到底要不要release queue, 基本上在<code>dispatch_get_global_queue</code> and <code>dispatch_get_main_queue()</code>, 因為是取得系統的內容, 所以並不用自己去執行<code>dispatch_release</code>, 不過在發佈最低是低於iOS 6, 你就會需要自己去管理你使用到的queue、group … 等GCD物件。</p>
+
+<p>參考來源:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">What is the difference between dispatch_get_global_queue and dispatch_queue_create?</a></li>
+<li><a href="http://stackoverflow.com/questions/12730202/do-you-need-to-release-gcd-queues-under-arc-in-ios-6-0">Do you need to release GCD queues under ARC in iOS 6.0?</a></li>
+<li><a href="http://blog.csdn.net/totogo2010/article/details/8016129">iOS多线程编程之Grand Central Dispatch(GCD)介绍和使用</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1">Apple Document</a></li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[行事曆小記事]]></title>
@@ -687,46 +726,6 @@ textField.inputAccessoryView = {your inputAccessoryView};
 <p>最後額外感謝<a href="https://twitter.com/aar0nTw">Aaron Haung</a>, 今天下午跟他詢問Roibbon p的效果該怎麼做, 沒想到他跟我說給我一小時, 我寫個外掛給你~真是揪甘心, 請受小弟一拜~</p>
 
 <p>也附上<a href="https://github.com/aar0nTw/Ribbonp">網址</a>大家有需要可以去抓囉。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[建立Resource Bundle]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/"/>
-    <updated>2013-02-28T21:59:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle</id>
-    <content type="html"><![CDATA[<p><img src="/images/bundle_image.png"><br/>
-<blockquote><p><br/><br/>本篇介紹如合製作Resoure Bundle <br/></p></blockquote></p>
-
-<!--more-->
-
-
-<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
-
-<p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
-<img src="/images/bundles/bundle_01.png"></p>
-
-<p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
-<img src="/images/bundles/bundle_02.png"></p>
-
-<p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
-<img src="/images/bundles/bundle_03.png"></p>
-
-<p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
-<img src="/images/bundles/bundle_04.png"></p>
-
-<p>加入你的檔案 <br/>
-<img src="/images/bundles/bundle_05.png"></p>
-
-<p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
-<img src="/images/bundles/bundle_06.png"></p>
-
-<p>最後使用bundle內部圖片
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;appAssets.bundle/images/blue_arrow.png&quot;</span><span class="p">];</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
 ]]></content>
   </entry>
   

@@ -9,7 +9,7 @@
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content="行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉. 行事曆功能主要是使用EventKit.framework; 在EventKit中, 除了行事曆( &hellip;">
+  <meta name="description" content="GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。 Grand Center Dispatch (GCD) 那個GCD是什麼呢? 又可以用來作些什麼? &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,72 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/14/gcdbi-ji/">GCD筆記</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-14T10:48:00+08:00" pubdate data-updated="true">Jul 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
+
+<h3>Grand Center Dispatch (GCD)</h3>
+
+<p>那個GCD是什麼呢? 又可以用來作些什麼?</p>
+
+<p>首先GCD是由Apple提供的多執行緒(Multiple Thread)解決方案, 主要是 NSOperationQueue、NSThread的替代方案。在使用GCD的時候, 你需要搭配Block來操作。</p>
+
+<p>使用方式就不多做交代了，網路上有很多更加詳細的介紹<del>(我絕對不承認自己也還在摸索的原因)</del></p>
+
+<h3>Globle Queue vs Create Queue</h3>
+
+<p>globle跟自行create的queue到底有何差異?</p>
+
+<p>在跟鳥大討論的時候, 這個問題一直困擾著我; 我在專案上有次在使用<code>dispatch_get_global_queue</code>來執行我要的內容, 然後發現跑出來的任務時間並不是按照順序來完成的 … 但是改用<code>dispatch_queue_create</code>就解決了我的問題, 當時因為時程上的關係沒有深究, 後來鳥大提供了<a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">stackoverflow的相關問題</a></p>
+
+<p>這邊有提到說<code>dispatch_get_global_queue</code>取得的queue在執行的時候是<code>concurrent</code>, 也就是並發的去執行(並連), 但是執行內容完成的順序會不一樣, 因此就可能會出現我所遇到的狀況; 而<code>dispatch_queue_create</code>取得的queue是<code>serial</code>的, 同時間只會執行一個任務(串連)。</p>
+
+<h3>release or not</h3>
+
+<p>到底要不要release queue, 基本上在<code>dispatch_get_global_queue</code> and <code>dispatch_get_main_queue()</code>, 因為是取得系統的內容, 所以並不用自己去執行<code>dispatch_release</code>, 不過在發佈最低是低於iOS 6, 你就會需要自己去管理你使用到的queue、group … 等GCD物件。</p>
+
+<p>參考來源:</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/10984885/what-is-the-difference-between-dispatch-get-global-queue-and-dispatch-queue-crea">What is the difference between dispatch_get_global_queue and dispatch_queue_create?</a></li>
+<li><a href="http://stackoverflow.com/questions/12730202/do-you-need-to-release-gcd-queues-under-arc-in-ios-6-0">Do you need to release GCD queues under ARC in iOS 6.0?</a></li>
+<li><a href="http://blog.csdn.net/totogo2010/article/details/8016129">iOS多线程编程之Grand Central Dispatch(GCD)介绍和使用</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1">Apple Document</a></li>
+</ul>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -279,53 +345,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-19T19:56:00+08:00" pubdate data-updated="true">Mar 19<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p class='info info' data-title='News'>已經可以在CocoaPods & CocoaControls找到GCTagList<br/>使用上有任何建議或問題可以直接在github上給我建議, 謝謝</p>
-
-
-<blockquote><p>在訂完今年的年度目標後, 除了正在並行的讀書會之外, 另一個就是在github上提交自己的lib; GCTagList 雖然內容很粗糙, 不過也算踏出了第一步, 希望之後會越來越好。</p></blockquote>
-
-
-<p></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -339,6 +358,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/14/gcdbi-ji/">GCD筆記</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">行事曆小記事</a>
@@ -356,15 +379,11 @@
         <a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/">我在github的第一個Repo-GCTagList</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (5)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (5)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (7)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (6)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (5)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (8)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Comments</h1>
