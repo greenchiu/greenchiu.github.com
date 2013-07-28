@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-07-14T12:28:25+08:00</updated>
+  <updated>2013-07-28T20:03:49+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -18,7 +18,10 @@
     <link href="http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/"/>
     <updated>2013-07-14T10:48:00+08:00</updated>
     <id>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji</id>
-    <content type="html"><![CDATA[<p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
+    <content type="html"><![CDATA[<p class='info info' data-title='News'>更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28</p>
+
+
+<p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
 
 <h3>Grand Center Dispatch (GCD)</h3>
 
@@ -27,6 +30,9 @@
 <p>首先GCD是由Apple提供的多執行緒(Multiple Thread)解決方案, 主要是 NSOperationQueue、NSThread的替代方案。在使用GCD的時候, 你需要搭配Block來操作。</p>
 
 <p>使用方式就不多做交代了，網路上有很多更加詳細的介紹<del>(我絕對不承認自己也還在摸索的原因)</del></p>
+
+<!-- more -->
+
 
 <h3>Globle Queue vs Create Queue</h3>
 
@@ -40,6 +46,19 @@
 
 <p>到底要不要release queue, 基本上在<code>dispatch_get_global_queue</code> and <code>dispatch_get_main_queue()</code>, 因為是取得系統的內容, 所以並不用自己去執行<code>dispatch_release</code>, 不過在發佈最低是低於iOS 6, 你就會需要自己去管理你使用到的queue、group … 等GCD物件。</p>
 
+<h3>關於GCD中的使用的Method</h3>
+
+<p>最近在GCD中呼叫其他的method, 然後很自然而然的, 又把這個method運行的內容包近GCD中; 忽然驚覺到這樣不會過度使用嗎? 就stackoverflow了一下, 找到了一個有用的答案</p>
+
+<blockquote><p>Methods are executed on the thread or queue from which they are invoked. So, if you wanted to update UI after processing data on a background queue, you&#8217;d need to explicitly execute your UI update on the main thread.</p></blockquote>
+
+
+<p></p>
+
+<h3>UIView能不能在GCD中運行</h3>
+
+<p>其實就是聽說做的到, 但是自己試不出來 …<a href="http://stackoverflow.com/questions/11122957/is-it-ok-to-create-a-uiview-on-a-background-thread">answer</a>,參考一下 …</p>
+
 <p>參考來源:</p>
 
 <ul>
@@ -47,6 +66,14 @@
 <li><a href="http://stackoverflow.com/questions/12730202/do-you-need-to-release-gcd-queues-under-arc-in-ios-6-0">Do you need to release GCD queues under ARC in iOS 6.0?</a></li>
 <li><a href="http://blog.csdn.net/totogo2010/article/details/8016129">iOS多线程编程之Grand Central Dispatch(GCD)介绍和使用</a></li>
 <li><a href="https://developer.apple.com/library/ios/#documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW1">Apple Document</a></li>
+</ul>
+
+
+<p>update [2013/07/28]</p>
+
+<ul>
+<li><a href="http://stackoverflow.com/questions/12032108/calling-another-method-from-within-a-gcd-queue">Calling another method from within a GCD queue</a></li>
+<li><a href="http://stackoverflow.com/questions/11122957/is-it-ok-to-create-a-uiview-on-a-background-thread">Is it ok to create a UIView on a background thread?</a></li>
 </ul>
 
 ]]></content>
