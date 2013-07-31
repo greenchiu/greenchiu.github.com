@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Green]]></title>
   <link href="http://greenchiu.github.com/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.com/"/>
-  <updated>2013-07-28T20:03:49+08:00</updated>
+  <updated>2013-07-31T19:30:19+08:00</updated>
   <id>http://greenchiu.github.com/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -18,7 +18,9 @@
     <link href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
     <updated>2013-06-15T11:38:00+08:00</updated>
     <id>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
-    <content type="html"><![CDATA[<p><img src="/images/blog/130615/130615_01.png">
+    <content type="html"><![CDATA[<p><p class='info info' data-title='News'>2013/07/31更新了關於iOS6的部份內容.</p></p>
+
+<p><img src="/images/blog/130615/130615_01.png">
 <blockquote><p><br/><br/>行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉.</p></blockquote></p>
 
 <p>行事曆功能主要是使用<code>EventKit.framework</code>; 在EventKit中, 除了<code>行事曆(Canlendar)</code>外, 同時也包含<code>提醒事項(Reminders)</code>的功能, 在修改/新增會需要使用到<code>EKEventStore</code>來做操作.</p>
@@ -398,6 +400,22 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div></p>
 
 <p>如果繼續使用EKSourceTypeLocal並不會出現錯誤, 但是就不會出現在列表之中; 另外如果不指定source.title=iCloud的話, 可能會因為沒有權限修改該group(ex:gmail account)而失敗.</p>
+
+<p><p class='info warning' data-title='2013/07/31 補充'>關於上述的source.title=iCloud的完整原因是, 你並無法建立自己的EKSource, 而在App中你只能存取iCloud的source去做新增Calendar的動作.</p></p>
+
+<h4>iOS6補充(2013/07/31)</h4>
+
+<p>這幾天有注意到一件事情, 如果你在iCloud的設定中, 行事曆跟提醒事項如果有一個沒有打開, 就無法使用, 在獲得permission完依然無法使用.</p>
+
+<p>再來, 因為只能存取iCloud下的行事曆, 但是iCloud的source.title並不一定會是iCloud, 有可能是其他的內容(ex:appId), 所以當發生這種事情的時候, 可能有兩種作法</p>
+
+<ul>
+<li>去提醒使用者或者設定一個欄位讓他去輸入source的title, 以便存取</li>
+<li>可以建議使用者到iCloud去, 點擊帳號進到裡面後, 將帳號描述改成iCloud(or another)</li>
+</ul>
+
+
+<p>這樣依照上面的程式, 你就可以存取到iCloud的eksource, 並去新增修改你的Calendar</p>
 
 <h2>題外話</h2>
 
