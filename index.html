@@ -9,7 +9,7 @@
   <meta name="author" content="Green Chiu">
 
   
-  <meta name="description" content="更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28 GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, &hellip;">
+  <meta name="description" content="最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹 關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +78,50 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/06/ren-shi-nsoperation/">認識NSOperation</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-06T21:13:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote>
+
+
+<p>關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, 其實可以使用<code>NSInvocationOperation</code>或是<code>NSBlockOperation</code>直接使用;關於NSOperation又可以分成並發(concurrent, 並連)或非並發(non-concurrent, 串連), 這篇會稍微介紹一下在不使用<code>NSOperationQueue</code>如何成為一個<code>concurrent</code>(<code>asynchrouons</code>)的operation.</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2013/08/06/ren-shi-nsoperation/">Read on &rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -290,50 +334,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-31T14:20:00+08:00" pubdate data-updated="true">Mar 31<span>st</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>其實應該是要說UIResponder才對, 不過範圍好像大了點, 為了偷懶, 就只記錄最近開發過程一些使用的技巧。</p></blockquote>
-
-
-<p></p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">Read on &rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -347,6 +347,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/06/ren-shi-nsoperation/">認識NSOperation</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/14/gcdbi-ji/">GCD筆記</a>
@@ -364,15 +368,11 @@
         <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/">UITextView和UITextField的使用小技巧</a>
-      </li>
-    
   </ul>
 </section>
 <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (6)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (5)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (8)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (7)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (6)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (9)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Comments</h1>
@@ -438,7 +438,7 @@
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) {return;}
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/zh_TW/all.js#appId=212934732101925&xfbml=1";
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 

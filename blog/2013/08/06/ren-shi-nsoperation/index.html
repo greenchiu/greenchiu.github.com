@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>認識NSOperation - Green</title>
+  <meta name="author" content="Green Chiu">
+
+  
+  <meta name="description" content="最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹 關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-36256939-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Green</a></h1>
+  
+    <h2>成為Hacker的路上</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:greenchiu.github.com" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+  <li><a href="/about-green/">About</a></li>
+  <li><a href="/presentations/">Presentations</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">認識NSOperation</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-06T21:13:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote>
+
+
+<p>關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, 其實可以使用<code>NSInvocationOperation</code>或是<code>NSBlockOperation</code>直接使用;關於NSOperation又可以分成並發(concurrent, 並連)或非並發(non-concurrent, 串連), 這篇會稍微介紹一下在不使用<code>NSOperationQueue</code>如何成為一個<code>concurrent</code>(<code>asynchrouons</code>)的operation.</p>
+
+<!-- more -->
+
+
+<h2>這篇會提到的內容</h2>
+
+<ul>
+<li>如何建立Subclass of Operation</li>
+<li>建立concurrent Operation</li>
+<li>Operation在Queue的用法</li>
+</ul>
+
+
+<p>可能還會提到一點點的<code>NSThread</code>&amp;<code>NSRunLoop</code></p>
+
+<h2>如何建立Subclass of NSOperation</h2>
+
+<p>因為NSOpertaion是一個抽象的Class, 所以在繼承的時候, 會需要去實作一些內容; 要實作的內容又因為Operation是concurrent或是non-concurrent有所不同.</p>
+
+<h3>non-concurrent</h3>
+
+<p>建立non-concurrent的operation比較簡單, 只要在建立的class去實作下面的method的就可以了</p>
+
+<figure class='code'><figcaption><span>non-concurrent operation need implement method </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">main</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在這個method中完成你要做的事情, 就是一個non-concurrent operation了.</p>
+
+<h3>concurrent</h3>
+
+<p>在實作一個concurrent operation相對來說複雜了一點, 你最少需要實作(override)下列幾個methods.</p>
+
+<figure class='code'><figcaption><span>concurrent operation need implement methods </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">start</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isConcurrent</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isExecuting</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isFinished</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>其中下面兩mehtod改變數值時個需要實作KVO notifications.</p>
+
+<ul>
+<li>isExecuting</li>
+<li>isFinished</li>
+</ul>
+
+
+<p>在<code>start</code>中, 你必須要去實現異步(asynchronous)的方式, 你會需要產生一個thread讓operation的任務執行在這個thread中; 這邊同時還要注意的是, 不可以在這邊使用<code>[super start]</code>; 以及在執行之前是否這個Operation是否已經被Cancel(isFinished)的狀況.</p>
+
+<h2>建立concurrent Operation</h2>
+
+<p>在上面我們已經了解了建立一個 Subclass of Operation需要實作哪些內容; 接下來直接進入如何建立自己的, 那麼我們開始建立一個新的Class <code>MyOperation</code> 並繼承 <code>NSOperation</code>, 並且有一個建立instance的Mehtod, 可以傳入一個block action. 下面我們先大致定義一些內容, 方便之後的實作.</p>
+
+<figure class='code'><figcaption><span>Create MyOpertation Class </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// MyOperation.h</span>
+</span><span class='line'><span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="o">^</span><span class="n">MyOperationAction</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">MyOperation</span> : <span class="nc">NSOperation</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">initWithAction:</span><span class="p">(</span><span class="n">MyOperationAction</span><span class="p">)</span><span class="nv">action</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'><span class="c1">// MyOperation.m</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">typedef</span> <span class="nf">NS_ENUM</span><span class="p">(</span><span class="n">NSInteger</span><span class="p">,</span> <span class="n">MyOperationState</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">MyOperationReadyState</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">MyOperationExecutingState</span><span class="p">,</span>
+</span><span class='line'>    <span class="n">MyOperationFinishedState</span>
+</span><span class='line'><span class="p">};</span>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">MyOperation</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">MyOperationAction</span> <span class="n">_action</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">MyOperationState</span> <span class="n">_state</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">MyOperationAction</span> <span class="n">action</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">MyOperationState</span> <span class="n">state</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在.m中, 建立了一個列舉來代表Operation的執行狀態, 接下來我們覆寫幾個應該要實作的method</p>
+
+<figure class='code'><figcaption><span>Override Methods </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="cp">#pragma mark - Override</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isConcurrent</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isExecuting</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MyOperationExecutingState</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isFinished</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MyOperationFinishedState</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">start</span> <span class="p">{</span>
+</span><span class='line'>    <span class="c1">// 在這邊坐些什麼吧</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在上面有提到, 如果要讓Operation實現Concurrent我們就必須在在<code>start</code>中去建立一個Thread, 並且讓他的任務在這個Thread中執行; 因此我們將建立一個singleton thread來讓MyOperation使用</p>
+
+<figure class='code'><figcaption><span>Create Singleton Thread </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">+</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">keepThreadAlive</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">do</span> <span class="p">{</span>
+</span><span class='line'>        <span class="err">@</span><span class="n">autoreleasepool</span> <span class="p">{</span>
+</span><span class='line'>            <span class="p">[[</span><span class="n">NSRunLoop</span> <span class="n">currentRunLoop</span><span class="p">]</span> <span class="n">run</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">}</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="n">YES</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">+</span> <span class="p">(</span><span class="n">NSThread</span><span class="o">*</span><span class="p">)</span><span class="nf">threadForMyOperation</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">NSThread</span><span class="o">*</span> <span class="n">_threadInstance</span> <span class="o">=</span> <span class="nb">nil</span><span class="p">;</span>
+</span><span class='line'>    <span class="k">static</span> <span class="n">dispatch_once_t</span> <span class="n">onceToken</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">dispatch_once</span><span class="p">(</span><span class="o">&amp;</span><span class="n">onceToken</span><span class="p">,</span> <span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">_threadInstance</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSThread</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithTarget:</span><span class="n">self</span>
+</span><span class='line'>                                           <span class="nl">selector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">keepThreadAlive</span><span class="p">)</span>
+</span><span class='line'>                                             <span class="nl">object:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">_threadInstance</span><span class="p">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">@&quot;MyOperation.Thread&quot;</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">_threadInstance</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">_threadInstance</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>上面有兩個method, 其中<code>keepThreadAlive</code>就如同Method的名字一樣, 是為了要讓Thread可以持續的運作, 不會在還沒做完事情, thread就結束了. 裡面的作法就是給他一個無限的loop, 去執行<code>NSRunLoop</code>的<code>run</code>mehtod. 讓這個thread成為NSRunLoop的一個<code>input source</code>.</p>
+
+<p class='info warning' data-title='注意'>這樣子的作法會讓這個thread, 一直存活直到user把app關閉才會結束.</p>
+
+
+<p>接下來我們回到<code>start</code>來</p>
+
+<figure class='code'><figcaption><span>run the task with MyThread for MyOperation </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">start</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">([</span><span class="n">self</span> <span class="n">isReady</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MyOperationExecutingState</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">operationDidStart</span><span class="p">)</span>
+</span><span class='line'>                     <span class="nl">onThread:</span><span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">threadForMyOperation</span><span class="p">]</span>
+</span><span class='line'>                   <span class="nl">withObject:</span><span class="nb">nil</span>
+</span><span class='line'>                <span class="nl">waitUntilDone:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">operationDidStart</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">isCancelled</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MyOperationFinishedState</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Operation is running %@ thread&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">action</span><span class="p">();</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">=</span> <span class="n">MyOperationFinishedState</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到這邊基本上已經完成concurrent operation的實作了, 我們先來測試一下跑起來的情況; 這邊我用一個BlockOperation跟MyOperation一起執行, 我把 MyOperation放在blockOperation前執行~</p>
+
+<figure class='code'><figcaption><span>test MyOperation </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">runOperations</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">MyOperation</span><span class="o">*</span> <span class="n">myOperation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithAction:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is MyOperation&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSBlockOperation</span><span class="o">*</span> <span class="n">blockOperation</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBlockOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation</span> <span class="nl">addExecutionBlock:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is block Operation&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">myOperation</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation</span> <span class="n">start</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/blog/130806/01.png"></p>
+
+<p>從上圖顯示的Log, 兩個Operation第一個Log的時間是相同的, 所以不算上延遲的話 … 應該已經達到我們想要的asynchronous效果, 那麼接下來在來看看在start中我們有使用到<code>[self isReady]</code>, 另外在operationDidStart中也有去判斷operation是否已經cancel的狀態, 所以我們會需要對<code>isReady</code>以及<code>cancel</code>這兩個method做一些調整</p>
+
+<figure class='code'><figcaption><span>add property for isCancelled and override isReady , cancel  </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="c1">// MyOperation.m</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">@interface</span> <span class="nc">MyOperation</span> <span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">MyOperationAction</span> <span class="n">_action</span><span class="p">;</span>
+</span><span class='line'>    <span class="n">MyOperationState</span> <span class="n">_state</span><span class="p">;</span>
+</span><span class='line'>    <span class="kt">BOOL</span> <span class="n">_cancel</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">copy</span><span class="p">)</span> <span class="n">MyOperationAction</span> <span class="n">action</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">assign</span><span class="p">)</span> <span class="n">MyOperationState</span> <span class="n">state</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">readonly</span><span class="p">,</span> <span class="n">getter</span> <span class="o">=</span> <span class="n">isCancelled</span><span class="p">)</span> <span class="kt">BOOL</span> <span class="n">cancel</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// override method</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">BOOL</span><span class="p">)</span><span class="nf">isReady</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="n">self</span><span class="p">.</span><span class="n">state</span> <span class="o">==</span> <span class="n">MyOperationReadyState</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cancel</span> <span class="p">{</span>
+</span><span class='line'>  <span class="n">_cancel</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>  <span class="c1">// 如果你的Operation是執行一些資料處理 or request, 可以做一些其他的處理</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>到這邊我們把需要用到的method都有實作到了, 不過前面我們有提到<code>isExecuting</code>、<code>isFinished</code>是需要實作<code>KVO Nofifications</code>的, 在文件中你可以看到需要generate KVO notifications的property大該有下列幾個</p>
+
+<ul>
+<li><strong>isCancelled</strong> - read-only property</li>
+<li>isConcurrent - read-only property</li>
+<li><strong>isExecuting</strong> - read-only property</li>
+<li><strong>isFinished</strong> - read-only property</li>
+<li><strong>isReady</strong> - read-only property</li>
+<li>dependencies - read-only property</li>
+<li>queuePriority - readable and writable property</li>
+<li>completionBlock - readable and writable property</li>
+</ul>
+
+
+<p>其中粗體的部份是在MyOperation會變動的, 所以我們必須在變動的時候送出KVO Notification, 因此我們再稍微調整一下, 在有修改到state幾個地方跟cancel都加上動作</p>
+
+<figure class='code'><figcaption><span>add kvo notifications </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">cancel</span> <span class="p">{</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isCancelled&quot;</span><span class="p">];</span>
+</span><span class='line'>  <span class="n">_cancelled</span> <span class="o">=</span> <span class="n">YES</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isCancelled&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">start</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">([</span><span class="n">self</span> <span class="n">isReady</span><span class="p">])</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isExecuting&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isReady&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">_state</span> <span class="o">=</span> <span class="n">MyOperationExecutingState</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isReady&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isExecuting&quot;</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">performSelector:</span><span class="k">@selector</span><span class="p">(</span><span class="n">operationDidStart</span><span class="p">)</span>
+</span><span class='line'>                     <span class="nl">onThread:</span><span class="p">[[</span><span class="n">self</span> <span class="n">class</span><span class="p">]</span> <span class="n">threadForMyOperation</span><span class="p">]</span>
+</span><span class='line'>                   <span class="nl">withObject:</span><span class="nb">nil</span>
+</span><span class='line'>                <span class="nl">waitUntilDone:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">operationDidStart</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">.</span><span class="n">isCancelled</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isFinished&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isCancelled&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">_state</span> <span class="o">=</span> <span class="n">MyOperationFinishedState</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isCancelled&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isFinished&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;Operation is running %@ thread&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">self</span><span class="p">.</span><span class="n">action</span><span class="p">();</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isFinished&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">willChangeValueForKey:</span><span class="s">@&quot;isExecuting&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="n">_state</span> <span class="o">=</span> <span class="n">MyOperationFinishedState</span><span class="p">;</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isExecuting&quot;</span><span class="p">];</span>
+</span><span class='line'>        <span class="p">[</span><span class="n">self</span> <span class="nl">didChangeValueForKey:</span><span class="s">@&quot;isFinished&quot;</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>這樣, 就完成了一個簡易的Operation了~ 當然在不同的情況之下還是有一些部分需要做調整, 例如使用OperationQueue的時候, 你為Operation加上<code>dependent operation</code>, 就必須要讓isReady return <code>NO</code>, 否則queue可能就會判斷operation isReady=YES, 就直接去執行, 這樣造成結果或執行上的錯誤.</p>
+
+<h2>Operation在Queue的用法</h2>
+
+<p>在前面有講接一些該如何去實作一個Operation; 當然提到Operation通常都不會忘掉OperationQueue, 使用Queue, 除了可以讓non-concurrent operation達到concurrent的效果外, 也可以讓Operation去等待某些Operation完成後再去執行(替operation加上<code>dependent operation</code>), 而且比起每次都自行去建立<code>Thread</code>並且在用完後自行回收, OperationQueue使用起來更加的方便更有效率.</p>
+
+<p>在使用的時候, 要讓non-concurrent operation在queue中可以以concurrent的方式去執行, 你必須要建立一個NSOperationQueue實體, 如果使用<code>[NSOperationQueue mainQueue]</code>所取得的queue, 除非operation有特別處理過, 不然都會在<code>main thread</code>中執行, 不過依然會等待上一個operation完成後才會去執行; 以下面的範例, 我們來看看輸出的結果會如何:</p>
+
+<figure class='code'><figcaption><span>example for NSOperationQueue </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">runOperationsatCustomQueue</span> <span class="p">{</span>
+</span><span class='line'>    <span class="n">NSBlockOperation</span><span class="o">*</span> <span class="n">blockOperation01</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBlockOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation01</span> <span class="nl">addExecutionBlock:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is no.1 block Operation&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSBlockOperation</span><span class="o">*</span> <span class="n">blockOperation02</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBlockOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation02</span> <span class="nl">addExecutionBlock:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is no.2 block Operation, start sleep 1 second&quot;</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;no.2 wake up.&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSBlockOperation</span><span class="o">*</span> <span class="n">blockOperation03</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBlockOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation03</span> <span class="nl">addExecutionBlock:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;%@&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">NSThread</span> <span class="n">currentThread</span><span class="p">]);</span>
+</span><span class='line'>        <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is no.3 block Operation, no.2 operation is completed, start task&quot;</span><span class="p">);</span>
+</span><span class='line'>    <span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="p">[</span><span class="n">blockOperation03</span> <span class="nl">addDependency:</span><span class="n">blockOperation02</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="n">NSOperationQueue</span><span class="o">*</span> <span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">setSuspended:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">setMaxConcurrentOperationCount:</span><span class="mi">5</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">blockOperation01</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">blockOperation02</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">blockOperation03</span><span class="p">];</span>
+</span><span class='line'>    <span class="p">[</span><span class="n">queue</span> <span class="nl">setSuspended:</span><span class="n">NO</span><span class="p">];</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/blog/130806/02.png"></p>
+
+<p>從上面的結果, 你可以看到queue幫我們建立了三個thread分別給operation01、02跟03使用(有時候02跟03可能會出現公用一個thread的狀況), 你並不需要去特別管理thread, queue會自己幫你完成; 在上面的程式碼中, 我設定了queue一次最多可以執行五個operation, 然後operation03必須等operation02完成後, 才會接著執行, 因此圖片中顯示的結果是operation01跟02是一起執行, 接著operation03才執行.</p>
+
+<p>那如果這時候把上面使用的MyOperation會發生什麼事勒, 我們來試試看~ 下面改一下程式碼</p>
+
+<figure class='code'><figcaption><span>add MyOperation to the queue </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">MyOperation</span><span class="o">*</span> <span class="n">myOperation01</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithAction:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is 01 MyOperation&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">MyOperation</span><span class="o">*</span> <span class="n">myOperation02</span> <span class="o">=</span> <span class="p">[[</span><span class="n">MyOperation</span> <span class="n">alloc</span><span class="p">]</span> <span class="nl">initWithAction:</span><span class="o">^</span><span class="p">{</span>
+</span><span class='line'>  <span class="n">NSLog</span><span class="p">(</span><span class="s">@&quot;this is 02 MyOperation&quot;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">NSOperationQueue</span><span class="o">*</span> <span class="n">queue</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSOperationQueue</span> <span class="n">alloc</span><span class="p">]</span> <span class="n">init</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">setSuspended:</span><span class="n">YES</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">setMaxConcurrentOperationCount:</span><span class="mi">5</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">myOperation01</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">myOperation02</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">queue</span> <span class="nl">addOperation:</span><span class="n">blockOperation01</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="/images/blog/130806/03.png"></p>
+
+<p>基本上bopt01、02跟myopt01(myopt02)會是concurrent, 而myopt01跟02之間則是non-concurrent必須要其中一個完成後才會繼續執行(共用同一個thread).</p>
+
+<p>那麼, 有沒有辦法讓Operation(ex:MyOperation)自己執行的時候是concurrent, 然後在queue中執行的時候也是concurrent的方式?</p>
+
+<p>答案我想是有的, 多一個Mehtod<code>asychronous</code>跟變數去判斷是不是asynchronous啟動opertaion, 是的話就給他一個thread去執行任務, 如果直接執行<code>start</code>, 就會是non-concurrent operation; 這樣在使用queue的時候, 因為queue會直接去執行<code>start</code>, 就可以直接幫operation建立一個thread達到concurrent的目的. (isConcurrent = YES or NO, 好像不是主要的判斷方式)</p>
+
+<h2>最後</h2>
+
+<p>打完後發現感覺是打給自己看的XD, 都是程式碼~; 不過也把它留存當記錄囉, 如果有幫助到其他人也很棒. 有看到的人如果發現錯誤也麻煩幫忙指正一下, 感謝.</p>
+
+<p>最後附上參考網址跟一些stackoverflow的內容:</p>
+
+<ul>
+<li><a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/NSOperation_class/Reference/Reference.html#//apple_ref/doc/uid/TP40004591">NSOperation Class Reference</a></li>
+<li><a href="http://developer.apple.com/library/ios/#documentation/Cocoa/Reference/NSOperationQueue_class/Reference/Reference.html">NSOperationQueue Class Reference</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Reference/Foundation/Classes/NSThread_Class/Reference/Reference.html">NSThread Class Reference</a></li>
+<li><a href="https://developer.apple.com/library/ios/#documentation/Cocoa/Conceptual/Multithreading/RunLoopManagement/RunLoopManagement.html#//apple_ref/doc/uid/10000057i-CH16-SW1">Threading Programming Cuide # Run Loops</a></li>
+<li><a href="http://stackoverflow.com/questions/1646795/nsoperationqueue-and-concurrent-vs-non-concurrent">NSOperationQueue and concurrent vs non-concurrent</a></li>
+<li><a href="http://stackoverflow.com/questions/3041837/nsthread-vs-nsoperationqueue-vs-on-the-iphone">NSThread vs. NSOperationQueue vs. ??? on the iPhone</a></li>
+<li><a href="http://stackoverflow.com/questions/6273020/keep-nsthread-alive-and-run-nsrunloop-on-it">Keep NSThread alive and run NSRunLoop on it</a></li>
+</ul>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Green Chiu</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-06T21:13:00+08:00" pubdate data-updated="true">Aug 6<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/" data-via="handkid" data-counturl="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/" >Tweet</a>
+  
+  
+  <div class="g-plusone" data-size="medium"></div>
+  
+  
+    <div class="fb-like" data-send="true" data-width="450" data-show-faces="false"></div>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/07/14/gcdbi-ji/" title="Previous Post: GCD筆記">&laquo; GCD筆記</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/06/ren-shi-nsoperation/">認識NSOperation</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/14/gcdbi-ji/">GCD筆記</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/">行事曆小記事</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/">用NSInvocation來作為object performSelector的替代方案</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/">CocoaPods提交初體驗</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/cocoa'>Cocoa (7)</a></li><li><a href='/blog/categories/cocoapods'>CocoaPods (1)</a></li><li><a href='/blog/categories/github'>Github (1)</a></li><li><a href='/blog/categories/ios'>iOS (6)</a></li><li><a href='/blog/categories/job'>job (1)</a></li><li><a href='/blog/categories/objective-c'>Objective-C (9)</a></li><li><a href='/blog/categories/others'>others (1)</a></li><li><a href='/blog/categories/study'>study (2)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Comments</h1>
+  <div id="dsq-recentcomments" class="dsq-widget"><script type="text/javascript" src="http://disqus.com/forums/greenchiu/recent_comments_widget.js?hide_avatars=1&num_items=5"></script></div>
+</section>
+
+<section>
+  <h1>Latest Tweets</h1>
+  <ul id="tweets">
+    <li class="loading">Status updating...</li>
+  </ul>
+  <script type="text/javascript">
+    $.domReady(function(){
+      getTwitterFeed("handkid", 4, true);
+    });
+  </script>
+  <script src="/javascripts/twitter.js" type="text/javascript"> </script>
+  
+    <a href="http://twitter.com/handkid" class="twitter-follow-button" data-show-count="false">Follow @handkid</a>
+  
+</section>
+
+<section>
+  <h1>Links</h1>
+  <ul>
+    <li><a href="http://blog.buginception.com/" target="_blank">Aaron Huang</a></li>
+    <li><a href="http://patw.idv.tw/blog/" target="_blank">Patrick Wang</a></li>
+    <li><a href="http://grayliao.blogspot.tw/" target="_blank">Gray Liao</a></li>
+    <li><a href="http://blog.eddie.com.tw/" target="_blank">高見龍</a></li>
+    <li><a href="http://www.checkme.tw/wordpress/" target="_blank">Duncan Du</a></li>
+  </ul>
+</section>
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Green Chiu -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'greenchiu';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/';
+        var disqus_url = 'http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) {return;}
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/all.js#appId=212934732101925&xfbml=1";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+
+
+
+  <script type="text/javascript">
+    (function() {
+      var script = document.createElement('script'); script.type = 'text/javascript'; script.async = true;
+      script.src = 'https://apis.google.com/js/plusone.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(script, s);
+    })();
+  </script>
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
