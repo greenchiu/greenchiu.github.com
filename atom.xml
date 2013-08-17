@@ -2,22 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Green]]></title>
-  <link href="http://greenchiu.github.com/atom.xml" rel="self"/>
-  <link href="http://greenchiu.github.com/"/>
-  <updated>2013-08-16T17:50:29+08:00</updated>
-  <id>http://greenchiu.github.com/</id>
+  <link href="http://greenchiu.github.io/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2013-08-17T15:04:09+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
-    
+    <email><![CDATA[handkid1986@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
     <title type="html"><![CDATA[認識NSOperation]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/"/>
+    <link href="http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation/"/>
     <updated>2013-08-06T21:13:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation</id>
+    <id>http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation</id>
     <content type="html"><![CDATA[<blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote>
 
 
@@ -288,7 +288,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://greenchiu.github.com/images/blog/130806/01.png"></p>
+<p><img src="http://greenchiu.github.io/images/blog/130806/01.png"></p>
 
 <p>從上圖顯示的Log, 兩個Operation第一個Log的時間是相同的, 所以不算上延遲的話 … 應該已經達到我們想要的asynchronous效果, 那麼接下來在來看看在start中我們有使用到<code>[self isReady]</code>, 另外在operationDidStart中也有去判斷operation是否已經cancel的狀態, 所以我們會需要對<code>isReady</code>以及<code>cancel</code>這兩個method做一些調整</p>
 
@@ -512,7 +512,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://greenchiu.github.com/images/blog/130806/02.png"></p>
+<p><img src="http://greenchiu.github.io/images/blog/130806/02.png"></p>
 
 <p>從上面的結果, 你可以看到queue幫我們建立了三個thread分別給operation01、02跟03使用(有時候02跟03可能會出現公用一個thread的狀況), 你並不需要去特別管理thread, queue會自己幫你完成; 在上面的程式碼中, 我設定了queue一次最多可以執行五個operation, 然後operation03必須等operation02完成後, 才會接著執行, 因此圖片中顯示的結果是operation01跟02是一起執行, 接著operation03才執行.</p>
 
@@ -552,7 +552,7 @@
 </span></code></pre></td></tr></table></div></figure>
 
 
-<p><img src="http://greenchiu.github.com/images/blog/130806/03.png"></p>
+<p><img src="http://greenchiu.github.io/images/blog/130806/03.png"></p>
 
 <p>基本上bopt01、02跟myopt01(myopt02)會是concurrent, 而myopt01跟02之間則是non-concurrent必須要其中一個完成後才會繼續執行(共用同一個thread).</p>
 
@@ -581,9 +581,9 @@
   
   <entry>
     <title type="html"><![CDATA[GCD筆記]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/"/>
+    <link href="http://greenchiu.github.io/blog/2013/07/14/gcdbi-ji/"/>
     <updated>2013-07-14T10:48:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji</id>
+    <id>http://greenchiu.github.io/blog/2013/07/14/gcdbi-ji</id>
     <content type="html"><![CDATA[<p class='info info' data-title='News'>更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28</p>
 
 
@@ -647,13 +647,13 @@
   
   <entry>
     <title type="html"><![CDATA[行事曆小記事]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
+    <link href="http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
     <updated>2013-06-15T11:38:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
+    <id>http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
     <content type="html"><![CDATA[<p class='info info' data-title='News'>2013/07/31更新了關於iOS6的部份內容.</p>
 
 
-<p><img src="http://greenchiu.github.com/images/blog/130615/130615_01.png"></p>
+<p><img src="http://greenchiu.github.io/images/blog/130615/130615_01.png"></p>
 
 <blockquote><p>行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5-DP只要打code就會crash, 所以等之後再來做一些補充囉.</p></blockquote>
 
@@ -955,7 +955,7 @@
 
 
 <p>之後再行事曆的列表中, 你就可以看到你剛剛建立的Calendar(ex:我剛剛建立的是愛合購行事曆)
-<img src="http://greenchiu.github.com/images/blog/130615/130615_02.PNG"></p>
+<img src="http://greenchiu.github.io/images/blog/130615/130615_02.PNG"></p>
 
 <h3>iOS6中的差異</h3>
 
@@ -994,9 +994,9 @@
   
   <entry>
     <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
+    <link href="http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
     <updated>2013-04-27T12:47:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
+    <id>http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
     <content type="html"><![CDATA[<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
 
 <figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
@@ -1077,7 +1077,7 @@
 <p class='info warning' data-title='Set Arguments'>使用NSInvocation設定參數時, index要從2開始.</p>
 
 
-<p><img src="http://greenchiu.github.com/images/blog/130427/01.png"></p>
+<p><img src="http://greenchiu.github.io/images/blog/130427/01.png"></p>
 
 <figure class='code'><figcaption><span>取得回傳值</span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1101,10 +1101,10 @@
   
   <entry>
     <title type="html"><![CDATA[CocoaPods提交初體驗]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/"/>
+    <link href="http://greenchiu.github.io/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/"/>
     <updated>2013-04-09T19:44:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan</id>
-    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/blog/120409/01.png"></p>
+    <id>http://greenchiu.github.io/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.io/images/blog/120409/01.png"></p>
 
 <blockquote><p>距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~</p></blockquote>
 
@@ -1140,7 +1140,7 @@
 
 
 <p>建立之後, 在資料夾中會出現一個<code>GCTagList.podspec</code> <br/>
-<img src="http://greenchiu.github.com/images/blog/120409/02.png"> <br/>
+<img src="http://greenchiu.github.io/images/blog/120409/02.png"> <br/>
 接著編輯spec (依照習慣, 我個人習慣sublime text 2)</p>
 
 <figure class='code'><figcaption><span>編輯Spec </span></figcaption>
@@ -1198,7 +1198,7 @@
 
 
 <p>如果沒有錯誤會出現下面的內容 <br/>
-<img src="http://greenchiu.github.com/images/blog/120409/03.png"></p>
+<img src="http://greenchiu.github.io/images/blog/120409/03.png"></p>
 
 <p>接下來,</p>
 
@@ -1210,10 +1210,10 @@
 
 
 <p>完成後的大該像下面這樣 <br/>
-<img src="http://greenchiu.github.com/images/blog/120409/04.png"></p>
+<img src="http://greenchiu.github.io/images/blog/120409/04.png"></p>
 
 <p>在將修改玩的specs commot&amp;pusd到自己的github上, 然後在website點擊pull request來送出請求, 到這邊只要等待通知啦, 基本上spec有檢查的話應該就會直接通過了。 <br/>
-<img src="http://greenchiu.github.com/images/blog/120409/05.png"></p>
+<img src="http://greenchiu.github.io/images/blog/120409/05.png"></p>
 
 <h2>最後</h2>
 
@@ -1225,9 +1225,9 @@
   
   <entry>
     <title type="html"><![CDATA[UITextView和UITextField的使用小技巧]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
+    <link href="http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
     <updated>2013-03-31T14:20:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
+    <id>http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
     <content type="html"><![CDATA[<blockquote><p>其實應該是要說UIResponder才對, 不過範圍好像大了點, 為了偷懶, 就只記錄最近開發過程一些使用的技巧。</p></blockquote>
 
 
@@ -1236,7 +1236,7 @@
 <!--more-->
 
 
-<p><img src="http://greenchiu.github.com/images/blog/0331/417206.jpg"><br/>
+<p><img src="http://greenchiu.github.io/images/blog/0331/417206.jpg"><br/>
 (via <a href="http://blog.fashionguide.com.tw/602/posts/38191-iDM">http://blog.fashionguide.com.tw/602/posts/38191-iDM</a>)</p>
 
 <p>以上面的圖片內容作為參考, 在做這個畫面互動的時候, 我想我會用數個按鈕(UIButton)點下去後, 在將UIPickerView顯示出來, 最後再點擊完成將Picker的內容記錄下來並更新UIButton的title,這樣的作法以這個App來說應該已經足夠了。</p>
@@ -1323,9 +1323,9 @@
   
   <entry>
     <title type="html"><![CDATA[我在github的第一個Repo-GCTagList]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
+    <link href="http://greenchiu.github.io/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
     <updated>2013-03-19T19:56:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
+    <id>http://greenchiu.github.io/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
     <content type="html"><![CDATA[<p class='info info' data-title='News'>已經可以在CocoaPods & CocoaControls找到GCTagList<br/>使用上有任何建議或問題可以直接在github上給我建議, 謝謝</p>
 
 
@@ -1457,10 +1457,10 @@
   
   <entry>
     <title type="html"><![CDATA[建立Resource Bundle]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/"/>
+    <link href="http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle/"/>
     <updated>2013-02-28T21:59:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle</id>
-    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/bundle_image.png"></p>
+    <id>http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.io/images/bundle_image.png"></p>
 
 <blockquote><p>本篇介紹如合製作Resoure Bundle</p></blockquote>
 
@@ -1473,22 +1473,22 @@
 <p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
 
 <p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
-<img src="http://greenchiu.github.com/images/bundles/bundle_01.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_01.png"></p>
 
 <p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
-<img src="http://greenchiu.github.com/images/bundles/bundle_02.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_02.png"></p>
 
 <p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
-<img src="http://greenchiu.github.com/images/bundles/bundle_03.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_03.png"></p>
 
 <p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
-<img src="http://greenchiu.github.com/images/bundles/bundle_04.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_04.png"></p>
 
 <p>加入你的檔案 <br/>
-<img src="http://greenchiu.github.com/images/bundles/bundle_05.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_05.png"></p>
 
 <p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
-<img src="http://greenchiu.github.com/images/bundles/bundle_06.png"></p>
+<img src="http://greenchiu.github.io/images/bundles/bundle_06.png"></p>
 
 <p>最後使用bundle內部圖片</p>
 
@@ -1503,9 +1503,9 @@
   
   <entry>
     <title type="html"><![CDATA[2013年度目標]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao/"/>
+    <link href="http://greenchiu.github.io/blog/2013/02/13/2013nian-du-mu-biao/"/>
     <updated>2013-02-13T15:52:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao</id>
+    <id>http://greenchiu.github.io/blog/2013/02/13/2013nian-du-mu-biao</id>
     <content type="html"><![CDATA[<blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote>
 
 
@@ -1553,9 +1553,9 @@
   
   <entry>
     <title type="html"><![CDATA[iOS開發Memo(0)]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de/"/>
+    <link href="http://greenchiu.github.io/blog/2013/01/26/ioskai-fa-xiao-xin-de/"/>
     <updated>2013-01-26T15:01:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de</id>
+    <id>http://greenchiu.github.io/blog/2013/01/26/ioskai-fa-xiao-xin-de</id>
     <content type="html"><![CDATA[<blockquote><p>在專案改組跟新專案的切換告一段落之後，終於又有時間繼續來更新了，順便把最近在專案上使用的工具稍微記錄一下。</p></blockquote>
 
 
@@ -1600,10 +1600,10 @@ OS X Mountain Lion無法安裝的排除方式: <a href="http://www.zlu.me/blog/2
   
   <entry>
     <title type="html"><![CDATA[學徒模式-讀書心得]]></title>
-    <link href="http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/"/>
+    <link href="http://greenchiu.github.io/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/"/>
     <updated>2012-11-17T17:06:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de</id>
-    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/IMG_2682.jpg" width="400"></p>
+    <id>http://greenchiu.github.io/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.io/images/IMG_2682.jpg" width="400"></p>
 
 <blockquote><p>問題不在於征服一個未知的問題，而是一步一步，走出全新的路徑。</p><footer><strong>Gustav Mahler</strong> <cite>音樂家與作曲家</cite></footer></blockquote>
 
@@ -1645,10 +1645,10 @@ OS X Mountain Lion無法安裝的排除方式: <a href="http://www.zlu.me/blog/2
   
   <entry>
     <title type="html"><![CDATA[定個目標]]></title>
-    <link href="http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao/"/>
+    <link href="http://greenchiu.github.io/blog/2012/11/11/ding-ge-mu-biao/"/>
     <updated>2012-11-11T19:22:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao</id>
-    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.com/images/IMG_2652.jpg" width="400"></p>
+    <id>http://greenchiu.github.io/blog/2012/11/11/ding-ge-mu-biao</id>
+    <content type="html"><![CDATA[<p><img src="http://greenchiu.github.io/images/IMG_2652.jpg" width="400"></p>
 
 <blockquote><p>在經過一段有點走入死胡同的時間後, 也開始決定逼迫自己來做一些事情; 可能我這個人就是欠扁吧 … 不給自己一些壓力就會一直死拖活拖的往後延, 因此決定為自己設定一些目標/方式, 讓自己有一個努力的方向或是強制的學習.</p></blockquote>
 
@@ -1679,9 +1679,9 @@ OS X Mountain Lion無法安裝的排除方式: <a href="http://www.zlu.me/blog/2
   
   <entry>
     <title type="html"><![CDATA[Hello world.]]></title>
-    <link href="http://greenchiu.github.com/blog/2012/11/10/hello-world/"/>
+    <link href="http://greenchiu.github.io/blog/2012/11/10/hello-world/"/>
     <updated>2012-11-10T11:55:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2012/11/10/hello-world</id>
+    <id>http://greenchiu.github.io/blog/2012/11/10/hello-world</id>
     <content type="html"><![CDATA[<p>Hi,  部落格在經過好長一段時間的起起伏伏後, 終於決定搬到page.github.com來, 在上一個<a href="http://greenchiou.blogspot.tw">部落格</a>當初有好常一段的時間沒有進行更新跟維護, 這算是個人的失職<del>絕對不是下班後打LoL打太兇關係</del>.</p>
 
 <!-- more -->

@@ -2,22 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: others | Green]]></title>
-  <link href="http://greenchiu.github.com/blog/categories/others/atom.xml" rel="self"/>
-  <link href="http://greenchiu.github.com/"/>
-  <updated>2013-08-16T17:50:29+08:00</updated>
-  <id>http://greenchiu.github.com/</id>
+  <link href="http://greenchiu.github.io/blog/categories/others/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2013-08-17T15:04:09+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
-    
+    <email><![CDATA[handkid1986@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
     <title type="html"><![CDATA[2013年度目標]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao/"/>
+    <link href="http://greenchiu.github.io/blog/2013/02/13/2013nian-du-mu-biao/"/>
     <updated>2013-02-13T15:52:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao</id>
+    <id>http://greenchiu.github.io/blog/2013/02/13/2013nian-du-mu-biao</id>
     <content type="html"><![CDATA[<p><blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote></p>
 
 <!-- more -->

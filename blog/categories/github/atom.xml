@@ -2,22 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Github | Green]]></title>
-  <link href="http://greenchiu.github.com/blog/categories/github/atom.xml" rel="self"/>
-  <link href="http://greenchiu.github.com/"/>
-  <updated>2013-08-16T17:50:29+08:00</updated>
-  <id>http://greenchiu.github.com/</id>
+  <link href="http://greenchiu.github.io/blog/categories/github/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2013-08-17T15:04:09+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
-    
+    <email><![CDATA[handkid1986@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
     <title type="html"><![CDATA[CocoaPods提交初體驗]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/"/>
+    <link href="http://greenchiu.github.io/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/"/>
     <updated>2013-04-09T19:44:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan</id>
+    <id>http://greenchiu.github.io/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan</id>
     <content type="html"><![CDATA[<p><img src="/images/blog/120409/01.png">
 <blockquote><p><br/><br/>距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~</p></blockquote></p>
 

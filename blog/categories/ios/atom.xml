@@ -2,22 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: iOS | Green]]></title>
-  <link href="http://greenchiu.github.com/blog/categories/ios/atom.xml" rel="self"/>
-  <link href="http://greenchiu.github.com/"/>
-  <updated>2013-08-16T17:50:29+08:00</updated>
-  <id>http://greenchiu.github.com/</id>
+  <link href="http://greenchiu.github.io/blog/categories/ios/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2013-08-17T15:04:09+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
-    
+    <email><![CDATA[handkid1986@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
     <title type="html"><![CDATA[認識NSOperation]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/"/>
+    <link href="http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation/"/>
     <updated>2013-08-06T21:13:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation</id>
+    <id>http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation</id>
     <content type="html"><![CDATA[<p><blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote></p>
 
 <p>關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, 其實可以使用<code>NSInvocationOperation</code>或是<code>NSBlockOperation</code>直接使用;關於NSOperation又可以分成並發(concurrent, 並連)或非並發(non-concurrent, 串連), 這篇會稍微介紹一下在不使用<code>NSOperationQueue</code>如何成為一個<code>concurrent</code>(<code>asynchrouons</code>)的operation.</p>
@@ -682,9 +682,9 @@
   
   <entry>
     <title type="html"><![CDATA[行事曆小記事]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
+    <link href="http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
     <updated>2013-06-15T11:38:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
+    <id>http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
     <content type="html"><![CDATA[<p><p class='info info' data-title='News'>2013/07/31更新了關於iOS6的部份內容.</p></p>
 
 <p><img src="/images/blog/130615/130615_01.png">
@@ -1092,9 +1092,9 @@
   
   <entry>
     <title type="html"><![CDATA[UITextView和UITextField的使用小技巧]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
+    <link href="http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
     <updated>2013-03-31T14:20:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
+    <id>http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
     <content type="html"><![CDATA[<p><blockquote><p><br/><br/>其實應該是要說UIResponder才對, 不過範圍好像大了點, 為了偷懶, 就只記錄最近開發過程一些使用的技巧。</p></blockquote></p>
 
 <!--more-->
@@ -1177,9 +1177,9 @@ textField.inputAccessoryView = {your inputAccessoryView};
   
   <entry>
     <title type="html"><![CDATA[我在github的第一個Repo-GCTagList]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
+    <link href="http://greenchiu.github.io/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/"/>
     <updated>2013-03-19T19:56:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
+    <id>http://greenchiu.github.io/blog/2013/03/19/my-first-repo-a-gctaglist-at-github</id>
     <content type="html"><![CDATA[<p><p class='info info' data-title='News'>已經可以在CocoaPods &amp; CocoaControls找到GCTagList<br/>使用上有任何建議或問題可以直接在github上給我建議, 謝謝</p>
 <blockquote><p><br/><br/>在訂完今年的年度目標後, 除了正在並行的讀書會之外, 另一個就是在github上提交自己的lib; GCTagList 雖然內容很粗糙, 不過也算踏出了第一步, 希望之後會越來越好。 <br/></p></blockquote></p>
 
@@ -1300,9 +1300,9 @@ textField.inputAccessoryView = {your inputAccessoryView};
   
   <entry>
     <title type="html"><![CDATA[建立Resource Bundle]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/"/>
+    <link href="http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle/"/>
     <updated>2013-02-28T21:59:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle</id>
+    <id>http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle</id>
     <content type="html"><![CDATA[<p><img src="/images/bundle_image.png"><br/>
 <blockquote><p><br/><br/>本篇介紹如合製作Resoure Bundle <br/></p></blockquote></p>
 

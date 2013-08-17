@@ -1,77 +1,79 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>
     <url>
-        <loc>http://greenchiu.github.com/blog/2012/11/10/hello-world/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2012/11/10/hello-world/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2012/11/11/ding-ge-mu-biao/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2012/11/11/ding-ge-mu-biao/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/01/26/ioskai-fa-xiao-xin-de/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/01/26/ioskai-fa-xiao-xin-de/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/02/13/2013nian-du-mu-biao/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/02/13/2013nian-du-mu-biao/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/02/28/xcode-create-resource-bundle/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>
-            http://greenchiu.github.com/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/
-        </loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
-    </url>
-    <url>
-        <loc>
-            http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/
-        </loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
-    </url>
-    <url>
-        <loc>http://greenchiu.github.com/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
         <loc>
-            http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/
+            http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/
         </loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>
+            http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/
+        </loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/</loc>
-        <lastmod>2013-08-08T15:59:39+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/about-green/</loc>
-        <lastmod>2013-08-16T17:44:14+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/07/14/gcdbi-ji/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/blog/archives/</loc>
-        <lastmod>2013-08-08T15:59:39+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/</loc>
-        <lastmod>2013-08-08T15:59:39+08:00</lastmod>
+        <loc>http://greenchiu.github.io/about-green/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
     <url>
-        <loc>http://greenchiu.github.com/presentations/</loc>
-        <lastmod>2013-08-06T21:12:29+08:00</lastmod>
+        <loc>http://greenchiu.github.io/blog/archives/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://greenchiu.github.io/blog/categories/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://greenchiu.github.io/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
+    </url>
+    <url>
+        <loc>http://greenchiu.github.io/presentations/</loc>
+        <lastmod>2013-08-17T14:07:58+08:00</lastmod>
     </url>
 </urlset>

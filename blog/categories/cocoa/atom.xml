@@ -2,22 +2,22 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[Category: Cocoa | Green]]></title>
-  <link href="http://greenchiu.github.com/blog/categories/cocoa/atom.xml" rel="self"/>
-  <link href="http://greenchiu.github.com/"/>
-  <updated>2013-08-16T17:50:29+08:00</updated>
-  <id>http://greenchiu.github.com/</id>
+  <link href="http://greenchiu.github.io/blog/categories/cocoa/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2013-08-17T15:04:09+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
-    
+    <email><![CDATA[handkid1986@gmail.com]]></email>
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
   
   <entry>
     <title type="html"><![CDATA[認識NSOperation]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation/"/>
+    <link href="http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation/"/>
     <updated>2013-08-06T21:13:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/08/06/ren-shi-nsoperation</id>
+    <id>http://greenchiu.github.io/blog/2013/08/06/ren-shi-nsoperation</id>
     <content type="html"><![CDATA[<p><blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote></p>
 
 <p>關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, 其實可以使用<code>NSInvocationOperation</code>或是<code>NSBlockOperation</code>直接使用;關於NSOperation又可以分成並發(concurrent, 並連)或非並發(non-concurrent, 串連), 這篇會稍微介紹一下在不使用<code>NSOperationQueue</code>如何成為一個<code>concurrent</code>(<code>asynchrouons</code>)的operation.</p>
@@ -682,9 +682,9 @@
   
   <entry>
     <title type="html"><![CDATA[GCD筆記]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji/"/>
+    <link href="http://greenchiu.github.io/blog/2013/07/14/gcdbi-ji/"/>
     <updated>2013-07-14T10:48:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/07/14/gcdbi-ji</id>
+    <id>http://greenchiu.github.io/blog/2013/07/14/gcdbi-ji</id>
     <content type="html"><![CDATA[<p><p class='info info' data-title='News'>更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28</p></p>
 
 <p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
@@ -744,9 +744,9 @@
   
   <entry>
     <title type="html"><![CDATA[行事曆小記事]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
+    <link href="http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi/"/>
     <updated>2013-06-15T11:38:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
+    <id>http://greenchiu.github.io/blog/2013/06/15/xing-shi-li-xiao-ji-shi</id>
     <content type="html"><![CDATA[<p><p class='info info' data-title='News'>2013/07/31更新了關於iOS6的部份內容.</p></p>
 
 <p><img src="/images/blog/130615/130615_01.png">
@@ -1154,9 +1154,9 @@
   
   <entry>
     <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
+    <link href="http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
     <updated>2013-04-27T12:47:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
+    <id>http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
     <content type="html"><![CDATA[<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
 
 <p>``` objc can do it this way<br/>
@@ -1231,9 +1231,9 @@ NSLog(@"%d", retVal);
   
   <entry>
     <title type="html"><![CDATA[UITextView和UITextField的使用小技巧]]></title>
-    <link href="http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
+    <link href="http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/"/>
     <updated>2013-03-31T14:20:00+08:00</updated>
-    <id>http://greenchiu.github.com/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
+    <id>http://greenchiu.github.io/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao</id>
     <content type="html"><![CDATA[<p><blockquote><p><br/><br/>其實應該是要說UIResponder才對, 不過範圍好像大了點, 為了偷懶, 就只記錄最近開發過程一些使用的技巧。</p></blockquote></p>
 
 <!--more-->
