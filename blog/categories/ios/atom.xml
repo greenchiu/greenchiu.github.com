@@ -4,7 +4,7 @@
   <title><![CDATA[Category: iOS | Green]]></title>
   <link href="http://greenchiu.github.io/blog/categories/ios/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.io/"/>
-  <updated>2013-08-18T00:22:50+08:00</updated>
+  <updated>2013-08-31T11:28:16+08:00</updated>
   <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,384 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Xib來Layout]]></title>
+    <link href="http://greenchiu.github.io/blog/2013/08/29/shi-yong-xiblai-layout/"/>
+    <updated>2013-08-29T22:59:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2013/08/29/shi-yong-xiblai-layout</id>
+    <content type="html"><![CDATA[<p><blockquote><p>最近在複習以前沒注意到的東西, 順便也對AutoLayout做了一點功課, 記錄一下如何使用Xib來快速做一些Layout的動作.</p></blockquote></p>
+
+<p>(謎之音:這一段可以直接跳過, 不想看就直接往下吧)</p>
+
+<p>對於大多數的iOS開發者應該都有使用過Interface Builder, 可能也習慣使用IB來做開發; 就個人而言, 其實我更習慣用程式碼來做layout的動作, 即使到了iOS5推出了<code>Storyboard</code>也沒有改變我的習慣; 最近在追iOS6的內容(相容要到5.0, you know),看到<code>AutoLayout</code>覺得這真的是一個很棒的功能, 方便、快速, 只是可能太多物件會有點亂(在Xib中), 但是使用Xib來製作就還沒上手的我來說是一個比較容易上手的方式, 順便也嘗試改變一下只用程式來做Layout, 試試看是否會比較快或者是兩個互相搭配有更好的開發方式.</p>
+
+<!--more-->
+
+
+<p>這次會記錄的內容會有</p>
+
+<ul>
+<li>使用Xib來定義一個UIView's Subclass.</li>
+<li>在ViewController中, 不同的View使用不同的Xib載入內容.</li>
+<li>使用Xib來定義UITableViewCell, 並直接讓UITableView使用.</li>
+</ul>
+
+
+<p>內容大多數會差不多, 不過有幾個比較特別的地方會特別點出來</p>
+
+<h1>建立UIView subclass with Xib</h1>
+
+<p>這邊會有下面幾個步驟</p>
+
+<ul>
+<li>建立並宣告一個UIView subclass.</li>
+<li>為UIView subclass建立Xib並作連結.</li>
+<li>建立UIView class實體的時候載入Xib內容.</li>
+</ul>
+
+
+<h3>Step. 1-1</h3>
+
+<p>首先我們先建立一個Class <code>MyHeader</code></p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立UIView subclass named MyHeader </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="err">@</span><span class="n">interface</span> <span class="n">MyHeader</span> <span class="o">:</span> <span class="n">UIView</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UILabel</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">titleLabel</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UIButton</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">clickButton</span><span class="p">;</span>
+</span><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">IBAction</span><span class="p">)</span><span class="nf">touchUpButton:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nv">sender</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面的程式碼, 我在.h宣告了兩個property跟一個method, 前面加上<code>IBOutlet</code>、<code>IBAction</code>, 這兩個修飾字(是讓Class跟Xib溝通用的), 接下來新增Xib檔案讓MyHeader使用.</p>
+
+<h3>Step. 1-2</h3>
+
+<p>在Menu的File->New->File, 然後選擇iOS下的User Interface->Empty, 建立檔案並命名為<code>MyHeader</code>.(參考下圖)</p>
+
+<p><img src="http://f.cl.ly/items/401e41120B1N410W0l32/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8A%E5%8D%889.45.47.png"></p>
+
+<p>接著開啟MyHeader.xib, 並增加一個UIView到畫面上, <strong>同時將這個View的class設定為<code>MyHeader</code></strong>, 在<code>MyHeader.h</code>中我有定義兩個視覺物件分別是一個Label跟一個Button, 所以在剛剛Xib的View我們接著建立Button跟Label, 完成後大該會跟下圖一樣. (這邊跟我們再使用UIViewController, 將 File's Owner的Class設定成我們的ViewController Class有點不同, 需要注意一下)</p>
+
+<p><img src="http://cl.ly/image/0s323K0l443y/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8A%E5%8D%889.48.36.png"></p>
+
+<p>接著我們將<code>MyHeader.h</code>跟<code>MyHeader.xib</code>需要連接的property跟method連起來</p>
+
+<p><img src="http://cl.ly/image/2e2D333v2e1Y/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8A%E5%8D%8810.29.53.png"></p>
+
+<p>這邊可以發現因為View是<code>MyHeader Class</code>, 所以在Connections Inspector上會有我們再Class中定義可以跟Xib連結的項目.</p>
+
+<p>到這邊我們已經完成了Xib跟Class的基本設定, 接下來要回到程式的部份, 在建立MyHeader的時候讓MyHeader去載入Xib的內容.</p>
+
+<h3>Step. 1-3</h3>
+
+<p>在<code>MyHeader.m</code>中實作<code>init</code> method, 在<code>init</code>中我們可以使用兩種方式來載入Xib內容, 不過效果都是相同的.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>implement MyHeader's init method</span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">UINib</span> <span class="o">*</span><span class="n">nib</span> <span class="o">=</span> <span class="p">[</span><span class="n">UINib</span> <span class="nl">nibWithNibName:</span><span class="s">@&quot;MyHeader&quot;</span> <span class="nl">bundle:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="n">NSArray</span><span class="o">*</span> <span class="n">array</span><span class="p">;</span>
+</span><span class='line'><span class="n">array</span> <span class="o">=</span> <span class="p">[</span><span class="n">nib</span> <span class="nl">instantiateWithOwner:</span><span class="nb">nil</span>
+</span><span class='line'>                          <span class="nl">options:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">self</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyHeader</span><span class="o">*</span><span class="p">)[</span><span class="n">array</span> <span class="n">lastObject</span><span class="p">];</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * 需要修改 AutoresizingMask, 不然可能因為大小的關係跑掉.</span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="n">UIViewAutoresizingNone</span><span class="p">;</span>
+</span><span class='line'>    <span class="c1">// your statement</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在這邊, 先介紹第一種方法使用<code>UINib</code>來載入Xib的內容, 載入完成後在將Xib的資料實體化, 這邊會回傳一個<code>NSArray</code>包含著Xib所有的內容(top-level objects).</p>
+
+<p><p class='info warning' data-title='注意'>UINib只能使用Class Method來建立實體</p></p>
+
+<p>在Line4跟5的地方, <code>[nib instantiateWithOwner:nil options:nil]</code> 帶入的Owner跟Options都是<code>nil</code>, 因為我們再Xib中並沒有對<code>File's Owner</code>做Class的設定, 所以並不需要帶入(下一個內容會帶入) 不過即使這邊帶入也沒關係並沒有特別影響, 至於<code>options</code>的部份因為我自己沒有用到, 不過有查到一個相關的內容, 在最後附上給大家參考.</p>
+
+<p><p class='info info' data-title='關於回傳的Array'>另外, 關於回傳的Array, 因為xib裡面只有一個view, 所以才能用<code>lastObject</code>這個method去取得, 如果Xib裡面有多個獨立的view(可以參考第二個內容的圖), 就需要先判斷載入的view的class, 在去做設定.</p></p>
+
+<p>最後把MyHeader加到RootViewController的View中, 呈現的畫面參考下圖</p>
+
+<p><img src="http://cl.ly/image/2q1T3C171g3W/iOS%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%E2%80%9C2013.8.30%20%E4%B8%8A%E5%8D%8811.36.17%E2%80%9D.png" width="320" height="480"></p>
+
+<p>上面有提到說, 載入Xib的方式有兩種, 一種是使用<code>UINib</code>, 另一個方式是使用<code>NSBundle</code>, NSBundle有為載入Xib提供一個Category, 那麼我們修改一下init的內容在嘗試一次.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>use NSBundle loading Xib </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="nf">init</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">NSArray</span><span class="o">*</span> <span class="n">array</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="c1">//    UINib *nib = [UINib nibWithNibName:@&quot;MyHeader&quot; bundle:nil];</span>
+</span><span class='line'><span class="c1">//    array = [nib instantiateWithOwner:nil</span>
+</span><span class='line'><span class="c1">//                              options:nil];&lt;/p&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">array</span> <span class="o">=</span> <span class="p">[[</span><span class="n">NSBundle</span> <span class="n">mainBundle</span><span class="p">]</span> <span class="nl">loadNibNamed:</span><span class="s">@&quot;MyHeader&quot;</span>
+</span><span class='line'>                                      <span class="nl">owner:</span><span class="nb">nil</span>
+</span><span class='line'>                                    <span class="nl">options:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">self</span> <span class="o">=</span> <span class="p">(</span><span class="n">MyHeader</span><span class="o">*</span><span class="p">)[</span><span class="n">array</span> <span class="n">lastObject</span><span class="p">];</span>
+</span><span class='line'><span class="k">if</span><span class="p">(</span><span class="n">self</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="cm">/**</span>
+</span><span class='line'><span class="cm">     * 需要修改 AutoresizingMask, 不然可能因為大小的關係跑掉.</span>
+</span><span class='line'><span class="cm">     */</span>
+</span><span class='line'>    <span class="n">self</span><span class="p">.</span><span class="n">autoresizingMask</span> <span class="o">=</span> <span class="n">UIViewAutoresizingNone</span><span class="p">;</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'><span class="k">return</span> <span class="n">self</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>修改過後, 呈現的內容將跟使用<code>UINib</code>一模一樣.</p>
+
+<h3>Q&amp;A</h3>
+
+<p>Q: 如果再一個ViewController.xib中放入一個<code>MyHeader</code>View, 這個MyHeader有辦法載入嗎?<br/>
+A: 我現在嘗試還沒成功, 如果有成功的話在額外補充囉.</p>
+
+<h1>在ViewController中, 不同的View使用不同的Xib載入內容.</h1>
+
+<p>這邊先稍微解釋一下這個內容跟第一個內容最後的Q&amp;A的差異, 這邊的View不會是一個<code>UIView的Subclass</code>, 只是讓這個View的載入從另一個Xib去帶入, 跟一般ViewController.xib可能包含不一只一個View(參考下圖), 其中我所選取的是ViewController's view(灰底), 旁邊有另一個view, 現在這個內容就是把白色的View抽出來到另一個Xib裡面.</p>
+
+<p><img src="http://cl.ly/image/3i1g3y3s1z0A/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8B%E5%8D%8812.21.44.png"></p>
+
+<p>接下來我們要建立一個ViewController, 這個ViewController有一個UITableView跟UIView, 其中UIView是要用另個一Xib(不是ViewController所使用的Xib)來載入這個View.</p>
+
+<p>這邊的一些動作跟上面有些類似會省略一些內容, 大致要做的事情有下列</p>
+
+<ul>
+<li>建立UIViewController, 讓ViewController有<code>tableView</code>跟<code>tableViewHeader</code></li>
+<li>為tableViewHeader建立Xib, 並完成連結</li>
+</ul>
+
+
+<h3>Step. 2-1</h3>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>建立MyViewController </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">@</span><span class="n">interface</span> <span class="n">MyViewController</span> <span class="o">:</span> <span class="n">UIViewController</span>
+</span><span class='line'><span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span><span class="n">UITableViewDataSource</span><span class="p">,</span> <span class="n">UITableViewDelegate</span><span class="o">&gt;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">weak</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UITableView</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span> <span class="n">tableView</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">nonatomic</span><span class="p">,</span> <span class="n">strong</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UIView</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">header</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>接著打開MyViewController.xib, 並在View加入一個TableView, 並且與Class建立連結, 參考下圖</p>
+
+<p><img src="http://cl.ly/image/1o1R0U1z3R0t/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8B%E5%8D%883.55.36.png"></p>
+
+<h3>Step. 2-2</h3>
+
+<p>接下來我們直接建立ViewController's header要使用的xib並命名為<code>MyVCHeader</code>, 這邊比較不同的地方是, 這次的File's Owner地方, 需要到<code>Identity Inspector</code>將Custom Class更改為<code>MyViewController</code>, 這樣一來我們才有辦法在MyVCHeader.xib存取到MyViewController的<code>IBOutlet</code>參數; 完成後, 在xib建立一個view, 並在view加入幾個subview. 最後再把view跟File's Owner的<code>header</code>做連結.(參考下圖)</p>
+
+<p><img src="http://cl.ly/image/3R0l3s1R2j1t/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8B%E5%8D%884.21.45.png"></p>
+
+<p>接下來在<code>MyViewController.m</code>的<code>viewDidLoad</code>中, 我們來實作使header從Xib載入, 並將header設定為tableView's tableHeaderView.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">viewDidLoad</span>
+</span><span class='line'><span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">[</span><span class="n">super</span> <span class="n">viewDidLoad</span><span class="p">];</span>
+</span><span class='line'><span class="c1">// Do any additional setup after loading the view from its nib.</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">UINib</span><span class="o">*</span> <span class="n">nib</span> <span class="o">=</span> <span class="p">[</span><span class="n">UINib</span> <span class="nl">nibWithNibName:</span><span class="s">@&quot;MyVCHeader&quot;</span>
+</span><span class='line'>                            <span class="nl">bundle:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="p">[</span><span class="n">nib</span> <span class="nl">instantiateWithOwner:</span><span class="n">self</span> <span class="nl">options:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">tableView</span><span class="p">.</span><span class="n">tableHeaderView</span> <span class="o">=</span> <span class="n">self</span><span class="p">.</span><span class="n">header</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><img src="http://cl.ly/image/0u1E1h1a1s2y/iOS%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%E2%80%9C2013.8.30%20%E4%B8%8B%E5%8D%884.42.17%E2%80%9D.png"></p>
+
+<p>在執行之後的內容就是上圖; 在這邊你可能注意到, 這次並沒有運用回傳的Array來進行assign的動作, 而是在建立實體的時候, 將<code>owner</code>傳給帶入method中, 就會自己去做完成最後的connect動作, 這部份其實跟UIViewController在loadView之後的在去載入Xib(最後會到<code>viewDidLoad</code>)是一樣的動作.</p>
+
+<p>ps. 這邊也可以使用NSBundle來載入內容</p>
+
+<h1>使用Xib來定義UITableViewCell, 並直接讓UITableView使用.</h1>
+
+<p>這個內容會延續第二個內容製作的項目, 同時運用xib來建立Cell; 接下來會有兩個動作要去完成</p>
+
+<ul>
+<li>建立一個UITableViewCell Subclass然後跟Xib做連結(命名為MyCell)</li>
+<li>用UITableView註冊步驟一建立的UITableViewCell Subclass</li>
+</ul>
+
+
+<h3>Step. 3-1</h3>
+
+<p>這個動作跟第一個內容很像, 不過在.m中不需要特別使用UINib(NSBundle)來實作載入xib的動作; 在這邊就不多做說明, 可以參考下面在去實作xib就可以.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>MyCell.h </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="err">@</span><span class="n">interface</span> <span class="n">MyCell</span> <span class="o">:</span> <span class="n">UITableViewCell</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UILabel</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">titleLabel</span><span class="p">;</span>
+</span><span class='line'><span class="k">@property</span> <span class="p">(</span><span class="n">weak</span><span class="p">,</span> <span class="n">nonatomic</span><span class="p">)</span> <span class="kt">IBOutlet</span> <span class="n">UILabel</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">indexLabel</span><span class="p">;</span>
+</span><span class='line'><span class="k">@end</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p><img src="http://cl.ly/image/2P0Z2S142x2y/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202013-08-30%20%E4%B8%8B%E5%8D%887.49.26.png"></p>
+
+<h3>Step. 3-2</h3>
+
+<p>接下來在<code>viewDidLoad</code>讓TableView註冊MyCell, 這邊註冊的時候會需要帶入一個<code>identifier</code>, 這個identifier在之後是取得Cell的內容.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>對TableView註冊MyCell </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="n">UINib</span><span class="o">*</span> <span class="n">myCellNib</span> <span class="o">=</span> <span class="p">[</span><span class="n">UINib</span> <span class="nl">nibWithNibName:</span><span class="s">@&quot;MyCell&quot;</span> <span class="nl">bundle:</span><span class="nb">nil</span><span class="p">];</span>
+</span><span class='line'><span class="p">[</span><span class="n">self</span><span class="p">.</span><span class="n">tableView</span> <span class="nl">registerNib:</span><span class="n">myCellNib</span> <span class="nl">forCellReuseIdentifier:</span><span class="n">myCellIdentifier</span><span class="p">];</span><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>接著再實作UITableViewDataSource取得Cell的mehtod</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
+</span><span class='line'><span class="o">-</span> <span class="p">(</span><span class="n">UITableViewCell</span><span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="nl">tableView:</span><span class="p">(</span><span class="n">UITableView</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="p">)</span><span class="n">tableView</span> <span class="nl">cellForRowAtIndexPath:</span><span class="p">(</span><span class="n">NSIndexPath</span> <span class="o">*</span><span class="p">)</span><span class="n">indexPath</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="n">MyCell</span><span class="o">*</span> <span class="n">cell</span> <span class="o">=</span> <span class="p">[</span><span class="n">tableView</span> <span class="nl">dequeueReusableCellWithIdentifier:</span><span class="n">myCellIdentifier</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="n">cell</span><span class="p">.</span><span class="n">titleLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;t-%d&quot;</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+</span><span class='line'><span class="n">cell</span><span class="p">.</span><span class="n">indexLabel</span><span class="p">.</span><span class="n">text</span> <span class="o">=</span> <span class="p">[</span><span class="n">NSString</span> <span class="nl">stringWithFormat:</span><span class="s">@&quot;%d&quot;</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">.</span><span class="n">row</span><span class="p">];</span>
+</span><span class='line'>
+</span><span class='line'><span class="k">return</span> <span class="n">cell</span><span class="p">;</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>上面的程式碼你會注意到, 你不需要在去檢查cell是不是存在的動作, tableview會自己去做reuse跟create新的instance的動作, 這樣就可以直接使用MyCell. 執行的結果參考下圖.</p>
+
+<p><img src="http://cl.ly/image/2s1s1430132p/iOS%20%E6%A8%A1%E6%8B%9F%E5%99%A8%E5%B1%8F%E5%B9%95%E5%BF%AB%E7%85%A7%E2%80%9C2013.8.30%20%E4%B8%8B%E5%8D%889.40.16%E2%80%9D.png"></p>
+
+<h2>最後</h2>
+
+<p>關於用code藍Layout比較快還是用Xib會比較快速, 個人覺得可以是情況而定, 比較複雜的ViewController如果有較多的View需要去做切換, 可以使用xib+code的混合方式, 減少過多的程式碼, 也避免一個xib有太多的view而不好管理, 不過檔案可能會比較多, 就依照個人取捨來選擇作法吧.
+如果有任何錯誤, 在麻煩大家幫忙解答一下, 謝謝.</p>
+
+<h4>References &amp; Others</h4>
+
+<p>最後一個Link有提到關於載入Xib要帶入<code>options</code>的部份, 如果有興趣可以特別閱讀一下</p>
+
+<p><a href="https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/LoadingResources/Introduction/Introduction.html#//apple_ref/doc/uid/10000051i">Resource Programming Guide</a><br/>
+<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/NSBundle_UIKitAdditions/Introduction/Introduction.html#//apple_ref/occ/instm/NSBundle/loadNibNamed:owner:options:">NSBundle UIKit Additions Reference</a><br/>
+<a href="https://developer.apple.com/library/ios/documentation/UIKit/Reference/UINib_Ref/Reference/Reference.html#//apple_ref/doc/uid/TP40009580-CH1-24706">UINib Class Reference</a>
+<a href="http://stackoverflow.com/questions/4071738/how-to-use-a-xib-and-a-uiview-subclass-together">How to use a xib and a UIView subclass together?</a><br/>
+<a href="http://stackoverflow.com/questions/6950674/how-to-use-a-common-target-object-to-handle-actions-outlets-of-multiple-views">How to use a common target object to handle actions/outlets of multiple views?</a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[認識NSOperation]]></title>
@@ -1295,46 +1673,6 @@ textField.inputAccessoryView = {your inputAccessoryView};
 <p>最後額外感謝<a href="https://twitter.com/aar0nTw">Aaron Haung</a>, 今天下午跟他詢問Roibbon p的效果該怎麼做, 沒想到他跟我說給我一小時, 我寫個外掛給你~真是揪甘心, 請受小弟一拜~</p>
 
 <p>也附上<a href="https://github.com/aar0nTw/Ribbonp">網址</a>大家有需要可以去抓囉。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[建立Resource Bundle]]></title>
-    <link href="http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle/"/>
-    <updated>2013-02-28T21:59:00+08:00</updated>
-    <id>http://greenchiu.github.io/blog/2013/02/28/xcode-create-resource-bundle</id>
-    <content type="html"><![CDATA[<p><img src="/images/bundle_image.png"><br/>
-<blockquote><p><br/><br/>本篇介紹如合製作Resoure Bundle <br/></p></blockquote></p>
-
-<!--more-->
-
-
-<p>開發iOS Application大該有兩年左右的時間了, 在使用外部的資源的時候常常看到*.bundle的檔案, 慢慢的就很好奇該如何製作一個resource bundle(Apple文件上稱為loadable bundles)檔案。上網查詢了一下，找到了一個很簡單的方式，跟大家分享。</p>
-
-<p>首先在你專案的finder建立一個資料夾名稱就設定為appAssets.bundle(參考下圖) <br/>
-<img src="/images/bundles/bundle_01.png"></p>
-
-<p>接著確認後會詢問你是否要加入.bundle的附檔名(不要懷疑給他按下去就對了)
-<img src="/images/bundles/bundle_02.png"></p>
-
-<p>接著, 很神奇的就是你folder就會變成resource bundle的樣式
-<img src="/images/bundles/bundle_03.png"></p>
-
-<p>接著下來, 將你想要放入的檔案(ex:xib,png … etc.)放入resource bundle中, 先對著appAssets.bundle右鍵顯示套件內容 <br/>
-<img src="/images/bundles/bundle_04.png"></p>
-
-<p>加入你的檔案 <br/>
-<img src="/images/bundles/bundle_05.png"></p>
-
-<p>這樣, 你的loadable bundle就製作完成了; 接著我們把他放入專案來使用, 加入專案後你可以展開appAssets.bundle的內容, 結構應該會跟上圖相同, 這樣就大功告成啦!
-<img src="/images/bundles/bundle_06.png"></p>
-
-<p>最後使用bundle內部圖片
-<div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">UIImage</span> <span class="o">*</span><span class="n">image</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIImage</span> <span class="nl">imageNamed:</span><span class="s">@&quot;appAssets.bundle/images/blue_arrow.png&quot;</span><span class="p">];</span> <span class="o">&lt;</span><span class="n">br</span><span class="o">/&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div></p>
-
-<p>最後附上參考網址:<a href="http://www.applausible.com/blog/?p=703">Reference</a></p>
 ]]></content>
   </entry>
   
