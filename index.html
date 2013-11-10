@@ -9,7 +9,7 @@
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content="Aug 29th, 2013 Cocoa, Objective-C, iOS 使用Xib來Layout 最近在複習以前沒注意到的東西, 順便也對AutoLayout做了一點功課, 記錄一下如何使用Xib來快速做一些Layout的動作. (謎之音:這一段可以直接跳過, 不想看就直接往下吧) &hellip;">
+	<meta name="description" content="Nov 10th, 2013 Cocoa, iOS Core-Animation筆記 這次要來記錄一下CoreAnimation, core animation很實用也很簡單; 一般來說, UIView所提供的Animation已經可以提供大部分我們需要的效果, 不過如果想要用到更複雜, &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,42 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-10T09:21:00+08:00" data-updated="true" itemprop="datePublished">Nov 10<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/11/10/core-animationbi-ji/" itemprop="url">Core-Animation筆記</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>這次要來記錄一下<code>CoreAnimation</code>, core animation很實用也很簡單; 一般來說, UIView所提供的Animation已經可以提供大部分我們需要的效果, 不過如果想要用到更複雜, 比較特別的動畫, UIView Animation就沒辦法符合我們的需求.</p>
+
+
+		
+		<a href="/blog/2013/11/10/core-animationbi-ji/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -263,63 +299,6 @@
 
 		
 		<a href="/blog/2013/06/15/xing-shi-li-xiao-ji-shi/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-04-27T12:47:00+08:00" data-updated="true" itemprop="datePublished">Apr 27<span>th</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>
-
-
-</div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" itemprop="url">用NSInvocation來作為object performSelector的替代方案</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
-
-<figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">currentMehtod</span> <span class="p">{</span>
-</span><span class='line'>  <span class="kt">SEL</span> <span class="n">action2</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">action2:</span><span class="p">);</span>
-</span><span class='line'>  <span class="p">[</span><span class="n">object</span> <span class="nl">performSelector:</span><span class="n">action2</span> <span class="nl">withObject:</span><span class="n">data</span> <span class="nl">afterDelay:</span><span class="mf">1.f</span><span class="p">];</span>
-</span><span class='line'>  <span class="cm">/** …</span>
-</span><span class='line'><span class="cm">  * do somethig after …</span>
-</span><span class='line'><span class="cm">  **/</span>
-</span><span class='line'><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
-
-<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
-
-
-		
-		<a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>

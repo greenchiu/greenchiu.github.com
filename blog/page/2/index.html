@@ -9,7 +9,7 @@
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content="Apr 9th, 2013 CocoaPods, Github, Objective-C CocoaPods提交初體驗 距離將GCTagList提交到CocoaPods,大概有一個禮拜了, 也送了兩個版本到上面去; 今天記錄一下提交的一些內容~ Read on &rarr; Mar 31st, &hellip;">
+	<meta name="description" content="Apr 27th, 2013 Cocoa, Objective-C 用NSInvocation來作為object performSelector的替代方案 在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,63 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-04-27T12:47:00+08:00" data-updated="true" itemprop="datePublished">Apr 27<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" itemprop="url">用NSInvocation來作為object performSelector的替代方案</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
+
+<figure class='code'><figcaption><span>can do it this way  </span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="k">-</span> <span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="nf">currentMehtod</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kt">SEL</span> <span class="n">action2</span> <span class="o">=</span> <span class="k">@selector</span><span class="p">(</span><span class="nl">action2:</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">[</span><span class="n">object</span> <span class="nl">performSelector:</span><span class="n">action2</span> <span class="nl">withObject:</span><span class="n">data</span> <span class="nl">afterDelay:</span><span class="mf">1.f</span><span class="p">];</span>
+</span><span class='line'>  <span class="cm">/** …</span>
+</span><span class='line'><span class="cm">  * do somethig after …</span>
+</span><span class='line'><span class="cm">  **/</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
+
+<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
+
+
+		
+		<a href="/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -253,43 +310,6 @@
 
 		
 		<a href="/blog/2013/02/28/xcode-create-resource-bundle/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-02-13T15:52:00+08:00" data-updated="true" itemprop="datePublished">Feb 13<span>th</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/others/'>others</a>
-
-
-</div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/02/13/2013nian-du-mu-biao/" itemprop="url">2013年度目標</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<blockquote><p>又過了一年了, 去年的這個時候在Nexdoor定了幾個年度目標, 不過達成率可能不到30%, 是還要精進的地方, 今年要在更確實的去落實並執行目標.</p></blockquote>
-
-
-
-		
-		<a href="/blog/2013/02/13/2013nian-du-mu-biao/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>

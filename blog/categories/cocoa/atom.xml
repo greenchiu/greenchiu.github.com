@@ -4,7 +4,7 @@
   <title><![CDATA[Category: Cocoa | Green]]></title>
   <link href="http://greenchiu.github.io/blog/categories/cocoa/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.io/"/>
-  <updated>2013-08-31T11:46:15+08:00</updated>
+  <updated>2013-11-10T09:32:23+08:00</updated>
   <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,133 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Core-Animation筆記]]></title>
+    <link href="http://greenchiu.github.io/blog/2013/11/10/core-animationbi-ji/"/>
+    <updated>2013-11-10T09:21:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2013/11/10/core-animationbi-ji</id>
+    <content type="html"><![CDATA[<p>這次要來記錄一下<code>CoreAnimation</code>, core animation很實用也很簡單; 一般來說, UIView所提供的Animation已經可以提供大部分我們需要的效果, 不過如果想要用到更複雜, 比較特別的動畫, UIView Animation就沒辦法符合我們的需求.</p>
+
+<!--more-->
+
+
+<h2>CAAnimation</h2>
+
+<p>CAAnimation 是 CoreAnimation 基礎的 Object, 而我們大多真正會使用的大該是下面五種繼承CAAnimttion的物件</p>
+
+<ul>
+<li>CAPropertyAnimation 主要使用 下面兩個subclass
+
+<ul>
+<li> CAKeyframeAnimation</li>
+<li> CABasicAnimation</li>
+</ul>
+</li>
+<li>CAAnimationGroup</li>
+<li>CATransition</li>
+<li>CATransaction</li>
+</ul>
+
+
+<p>其中CATransaction使用的方式跟其他四個比較不一樣, 不過也算是比較常用的 CoreAnimation物件; CATransition已經內建了幾種動畫的樣式, 例如相機開啟、水波以及垃圾桶的特效等等, 都可以直接運用CATransition來使用.</p>
+
+<p>CAPropertyAnimation 的使用方式都是改變物件的property, 是使用keypath的方式來改變property(KVC), 在建立Animation的時候就要先給要變化的keypath</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'><figcaption><span>example </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CABasicAnimation</span> <span class="o">*</span><span class="n">anim</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nl">animationWithKeyPath:</span><span class="s">@&quot;alpha&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">anim</span><span class="p">.</span><span class="n">fromValue</span> <span class="o">=</span> <span class="err">@</span><span class="mi">1</span><span class="p">;</span>
+</span><span class='line'><span class="n">anim</span><span class="p">.</span><span class="n">toValue</span> <span class="o">=</span> <span class="err">@</span><span class="mi">1</span><span class="p">;</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">tagetLayer</span> <span class="nl">addAnimation:</span><span class="n">anima</span> <span class="nl">forKey:</span><span class="s">@&quot;anima&quot;</span><span class="p">]</span> <span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>在使用KVC在使用的時候, 改變內容都是以NSValue; 到帶入的NSValue型態可以參考這邊的<a href="https://developer.apple.com/library/mac/documentation/Cocoa/Conceptual/CoreAnimation_guide/AnimatableProperties/AnimatableProperties.html#//apple_ref/doc/uid/TP40004514-CH11-SW1">文件</a></p>
+
+<p>上面這樣就會有簡單動畫, layer的半透明會越來越明顯只到消失; 可以指定的變化的數值之外, 同時也可以指定Animation的時間以及動畫的速率方式, 分別是:</p>
+
+<ul>
+<li>duration</li>
+<li>timimgFunction</li>
+</ul>
+
+
+<p>最後還有一個需要特別提到的部份, <code>fillMode</code>的部份, 可以特別注意一下, 必須要設成 <code>kCAFillModeForwards</code>, 不然在執行玩動畫後, 可能會回到原本的狀態.
+而在Keyframe的部份, 也是相識的作法, 用 <code>values</code> 跟 <code>keyTimes</code>.</p>
+
+<h2>CAAnimtaionGroup</h2>
+
+<p>在使用Keyframe and basic animation的時候, 如果是一個一個加到 layer上面去, 會是依序加上去的順序去執行, 如果想要Animation是同時發生(concurrent)的話, 就需要搭配 CAAnimationGroup來使用.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">CABasicAnimation</span> <span class="o">&lt;</span><span class="n">em</span><span class="o">&gt;</span><span class="n">anim0</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nl">animationWithKeyPath:</span><span class="s">@&quot;...&quot;</span><span class="p">];</span>
+</span><span class='line'><span class="n">CAKeyframeAnimation</span> <span class="o">&lt;/</span><span class="n">em</span><span class="o">&gt;</span><span class="n">anim1</span> <span class="o">=</span> <span class="p">[</span><span class="n">CABasicAnimation</span> <span class="nl">animationWithKeyPath:</span><span class="s">@&quot;...&quot;</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">CAAnimationGroup</span> <span class="o">*</span><span class="n">animGroup</span> <span class="o">=</span> <span class="p">[</span><span class="n">CAAnimationGroup</span> <span class="n">animation</span><span class="p">];</span>
+</span><span class='line'><span class="n">animGroup</span><span class="p">.</span><span class="n">animations</span> <span class="o">=</span> <span class="err">@</span><span class="p">[</span><span class="n">anim0</span><span class="p">,</span> <span class="n">anim1</span><span class="p">];</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">[</span><span class="n">targetLayer</span> <span class="nl">addAnimation:</span><span class="n">animGroup</span> <span class="nl">forKey:</span><span class="s">@&quot;anima&quot;</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<h2>CATransaction</h2>
+
+<p>最後來提提CATransaction; 在運用CALayer的時候, 只要我們一修改frame, Layer就會開始呈現動畫,
+而CATransaction是可以用來控制這些動畫的時間跟動畫速率, 跟UIView的Aniamtion用法有點像.</p>
+
+<p><div class='bogus-wrapper'><notextile><figure class='code'> <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="p">[</span><span class="n">CATransaction</span> <span class="n">begin</span><span class="p">];</span>
+</span><span class='line'><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">animated</span><span class="p">)</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">[</span><span class="n">CATransaction</span> <span class="nl">setValue:</span><span class="p">(</span><span class="kt">id</span><span class="p">)</span><span class="n">kCFBooleanTrue</span>
+</span><span class='line'>                 <span class="nl">forKey:</span><span class="n">kCATransactionDisableActions</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span>
+</span><span class='line'><span class="k">else</span> <span class="p">{</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">pre</span><span class="o">&gt;&lt;</span><span class="n">code</span><span class="o">&gt;</span><span class="p">[</span><span class="n">CATransaction</span> <span class="nl">setAnimationDuration:</span><span class="mf">.3f</span><span class="p">];</span>
+</span><span class='line'><span class="o">&lt;/</span><span class="n">code</span><span class="o">&gt;&lt;/</span><span class="n">pre</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="p">}</span><span class="o">&lt;/</span><span class="n">p</span><span class="o">&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="o">&lt;</span><span class="n">p</span><span class="o">&gt;</span><span class="n">self</span><span class="p">.</span><span class="n">layer</span><span class="p">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="p">[</span><span class="n">UIColor</span> <span class="n">clearColor</span><span class="p">].</span><span class="n">CGColor</span><span class="p">;</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">gradientLayer</span><span class="p">.</span><span class="n">colors</span> <span class="o">=</span> <span class="n">colors</span><span class="p">;</span>
+</span><span class='line'><span class="n">self</span><span class="p">.</span><span class="n">gradientLayer</span><span class="p">.</span><span class="n">locations</span> <span class="o">=</span> <span class="n">locations</span><span class="p">;</span>
+</span><span class='line'><span class="p">[</span><span class="n">CATransaction</span> <span class="n">commit</span><span class="p">];</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div></p>
+
+<p>如果有有錯誤也請幫忙指正, 謝謝.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用Xib來Layout]]></title>
@@ -1527,83 +1654,6 @@ A: 我現在嘗試還沒成功, 如果有成功的話在額外補充囉.</p>
 <h2>題外話</h2>
 
 <p>最近總想著改變一些記錄的方式, 不過有一點不得其門而入, 像是該如何把東西些的足夠深入, 內容方面也是比較精簡; 在一些敘述的方法跟內容的考慮上就變得很難拿捏, 該如何調整可能只能慢慢去做嘗試跟改變了, 也很希望有在看的人可以給我一些建議跟方向, 一起討論程式方面也沒有問題, 謝謝.</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[用NSInvocation來作為object performSelector的替代方案]]></title>
-    <link href="http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector/"/>
-    <updated>2013-04-27T12:47:00+08:00</updated>
-    <id>http://greenchiu.github.io/blog/2013/04/27/yong-nsinvocationlai-qu-dai-performselector</id>
-    <content type="html"><![CDATA[<p>在寫程式的時候, 常常會有需要呼叫好幾個method, 然後在時間上有所需別; 最常遇到的都是希望Layout改變完成之後再去執行下一步動作, 如果是一堆layout animation, 就會很常使用到delay去做一些時間差的區別.</p>
-
-<p>``` objc can do it this way<br/>
-- (void)currentMehtod {</p>
-
-<pre><code>SEL action2 = @selector(action2:);
-[object performSelector:action2 withObject:data afterDelay:1.f];
-/** …
- * do somethig after …
- **/
-</code></pre>
-
-<p>}
-```</p>
-
-<p>一開始使用的時候覺得還好, 但是慢慢的發現如果我的method一開始寫的時候帶入多個參數, 如果用上面的方式, 就要改寫本來的method, 這樣又得花時間, 而且可能最後都是帶入<code>NSDictionary</code>的物件, 在把需要的資料拉出來, 常常會把map的key打錯又多花很多時間在debug.</p>
-
-<p>在StackOverflow上查了參數數量的問題, 沒想到還真的有一個很棒的解法, 就是 <code>NSInvocation</code>.</p>
-
-<!--more-->
-
-
-<h2>NSInvocation</h2>
-
-<p>NSInvocation的使用有一個地方要特別注意, invocation不能使用 <code>alloc</code>跟<code>init</code>來建立實體, 只能使用<code>invocationWithMethodSignature:</code>來建立object.</p>
-
-<p>```objc object的method
-- (void)actionInvokeArgument1:(NSInteger)arg1 arg2:(NSNumber *)arg2 {</p>
-
-<pre><code>NSLog(@"action: arg1 + arg2=%d", arg1 + [arg2 integerValue]);
-</code></pre>
-
-<p>}
-<code>
-<p class='info info' data-title='Argument Type'>使用Invocation, mehtod所帶入的參數也不用都轉成object, int、BOOL…etc.都可以使用</p>
-</code> objc 建立一個NSInvocation實體
-SEL mySelector = @selector(actionInvokeArgument1:arg2:);
-NSMethodSignature<em> signature1 = [self methodSignatureForSelector:mySelector];
-NSInvocation </em>invocation = [NSInvocation invocationWithMethodSignature:signature1];
-```</p>
-
-<p>我們先使用<code>NSObject</code>的instance mehtod(也可以使用Class mehtod, 依照個人使用習慣), 先取得一個<code>NSMethodSignature</code>物件, 並建立一個NSInvocation.</p>
-
-<p><p class='info info' data-title='NSMethodSignature'>NSMethodSignature的numberOfArguments最小值是2; 0跟1是給預設的隱藏參數使用(self &amp; _cmd). 從2開始才是method-spec使用.</p></p>
-
-<p>這時取得的invocation只有簡單的method可帶入的argument數量, 在正式調用之前你還需要設定<code>target</code>跟<code>selector</code>.</p>
-
-<p><code>objc 設定invocation並調用
-[invocation setTarget:self];
-[invocation setSelector:mySelector];
-NSInteger arg1 = 1;
-NSNumber* arg2 = @2;
-[invocation setArgument:&amp;arg1 atIndex:2];
-[invocation setArgument:&amp;arg2 atIndex:3];
-[invocation invoke];
-</code><br/>
-<p class='info warning' data-title='Set Arguments'>使用NSInvocation設定參數時, index要從2開始.</p>
-<img src="/images/blog/130427/01.png"></p>
-
-<p><code>objc 取得回傳值
-NSInteger retVal;
-[invocation getReturnValue:&amp;retVal];
-NSLog(@"%d", retVal);
-</code>
-如果要延遲的話可以這樣使用
-<code>objc delay invoke
-[invocation performSelector:@selector(invoke) withObject:nil afterDelay:1];
-</code>
-要注意的是, 如果會需要取得回傳值, 可能不適合使用delay的方式~</p>
 ]]></content>
   </entry>
   
