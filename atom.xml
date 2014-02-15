@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.io/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.io/"/>
-  <updated>2013-11-10T09:32:23+08:00</updated>
+  <updated>2014-02-15T23:18:29+08:00</updated>
   <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,44 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[UICollectionViewLayout好神奇]]></title>
+    <link href="http://greenchiu.github.io/blog/2014/02/15/uicollectionviewlayouthao-shen-qi/"/>
+    <updated>2014-02-15T22:17:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2014/02/15/uicollectionviewlayouthao-shen-qi</id>
+    <content type="html"><![CDATA[<p>分享一下自己對於 UICollectionView 的看法, 僅供參考囉 ~</p>
+
+<p>UICollectionView 是 iOS6 開始支援的功能, 不過只到前陣子我才真正的有接觸到; 我曾經以為 UICollectionView 是 UITableView 的進階版本, 嗯 &#8230; 只能說我好傻好天真. UICollectionView 最厲害的地方應該是對 UICollectionViewCell 等等的 subviews 的 layout.</p>
+
+<!-- more -->
+
+
+<p>文件中, 其實也詳細的解釋了 UICollectionView 從 dataSource 取得資料後, 會交由 UICollectionViewLayout 來處理 layout 的動作, 如果沒有特別的設定, 大該只會用到 cell 大小不同, 多個 section 這樣的樣式(ex:iPad AppStore), 我也認為 UICollectionView 大該就這樣而已, 直到我真的去查了文件.</p>
+
+<p>這邊可能就不多談怎麼客製化 UICollectionViewLayout, 說說這樣的設計模式好了; AutoLayout 想必大家都不陌生, 很多人也因為 AutoLayout 認為 Apple 要推出不同尺寸的 Device, 但是比起 AutoLayout, 我覺得 UICollectionView 將 layout 的邏輯分離出來, 更適合再不同尺寸的 Device 上來使用.</p>
+
+<p>我個人認為有兩個方面值得這樣去嘗試:</p>
+
+<ul>
+<li>易維護</li>
+<li>客製化</li>
+</ul>
+
+
+<h4>易維護</h4>
+
+<p>再開發專案的時候, Model 固定之後的通常都不會變動(一變動通常都是改很大就是), 大多數調整的都是排版或者是 view 的外觀; 排版通常會因為不同的長寬再變動或是一些比較特殊的需求, 這時候如果我們將排版跟 view分開來, 我們只要在對應的 class 去修改需要修改的內容, 讓 class 也更精簡.</p>
+
+<h4>客製化</h4>
+
+<p>在不同的大尺寸的 Device, 設計該尺寸下的排版邏輯, 可以減少因為特殊需求需要把功能相同的 class 複製或是建立一個 superclass 來繼承, 在分別寫各自的內容. 可以在各自的 layout class 內去設計對應的樣式, 減少不必的重複內容. 當有新的尺寸時, 擴充也較方便.</p>
+
+<p>至於 Autolayout 的部份, 當然還是看個人需求去使用, 目前我的工作上是沒有碰到相關的應用, 所以也無法在這邊提供太多這方面的建議.</p>
+
+<p>如果有什麼看法歡迎一起討論, 有錯誤也請提出來, 謝謝.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Core-Animation筆記]]></title>
