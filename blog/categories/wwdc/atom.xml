@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: WWDC | Green]]></title>
+  <link href="http://greenchiu.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
+  <link href="http://greenchiu.github.io/"/>
+  <updated>2014-06-15T01:30:46+08:00</updated>
+  <id>http://greenchiu.github.io/</id>
+  <author>
+    <name><![CDATA[Green Chiu]]></name>
+    <email><![CDATA[handkid1986@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[[WWDC2014] About The Adaptive App.]]></title>
+    <link href="http://greenchiu.github.io/blog/2014/06/14/wwdc2014-about-the-adaptive-app/"/>
+    <updated>2014-06-14T21:06:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2014/06/14/wwdc2014-about-the-adaptive-app</id>
+    <content type="html"><![CDATA[<p>[Memo] Building Adaptive Apps with UIKit, Session 216</p>
+
+<!--more-->
+
+
+<h3>Size class</h3>
+
+<p>在 iOS8 之前, 在開發過程中會有3個畫面的大小要去考慮, 並且還需要對 Protrait 跟 Landscape 做鄉對應的設計與調整.</p>
+
+<p>而現在提出了一個新的概念 <code>Size class</code> 來描述現在 device 的 size(?) 與 oriention.</p>
+
+<h4>What's the size class?</h4>
+
+<p>size class 顧名思義的就是用 width x height 的概念, 來描述現在的畫面呈現的大小; 並且使用下面的描述來敘述現在的畫面大小.</p>
+
+<ul>
+<li>Compact (目前只有 iPhone 有使用到)</li>
+<li>Regular</li>
+</ul>
+
+
+<p><img src="http://cl.ly/image/230z253x0e0o/Size%20Classes.jpg" width="600"></p>
+
+<p>Apple 用兩個值來解釋現在顯示的 size; 已 iPhone 來說, 我們可以用 Compact x Regular 跟 Compact x Compact 來表示現在的 orientation 分別是 Protrait 以及 Landscope.</p>
+
+<p>到這邊也許會有一點搞混, 也許會出現這樣的疑問 : <br/>
+Q:在iPhone的時候, compact 的大小等於320嗎? <br/>
+A:其實是不一定的, 這個數字是可以改變的.</p>
+
+<p><code>Compact</code> &amp; <code>Regular</code> 與其說是一個數值, 其實應該要把它理解成一個狀態的敘述, 可以依照實際的需求去調整<code>UIView / UIViewController</code>的<code>size class</code>; 即便在原本的iPhone Protrait(320x568) 的畫面下, 你也可以把寬度定義成是 Regular, 讓他顯示分割畫面.</p>
+
+<p><img src="http://cl.ly/image/3b1O391j0I3x/iOS%20Simulator%20Screen%20Shot%202014.6.14%20%E4%B8%8B%E5%8D%8811.31.03.png" width="320"></p>
+
+<h4>UITraitCollection</h4>
+
+<p>Apple 使用 <code>UITraitCollection</code> 是用來表示現在 View 的 size class; 在 iOS8 中, UIView &amp; UIViewController 都實作了一個新的 protocol <code>UITraitEnvironment</code>, 來描述這個底下的 view or subviews 的 traitCollection.</p>
+
+<h4>Asset Catalogs</h4>
+
+<p>Asset Catalogs 同使也增加了對應的功能, 讓畫面在不同的 sizs class 使用不同大小的圖片.</p>
+
+<p>在 asset catalogs 的 inspector 中, 多出了 width &amp; height 的選項, 可以依照實際的需求增加圖檔</p>
+
+<p><img src="http://cl.ly/image/0Z1t0m0e123M/%E8%9E%A2%E5%B9%95%E5%BF%AB%E7%85%A7%202014-06-14%20%E4%B8%8B%E5%8D%8811.46.08.png"></p>
+
+<p>關於 showViewController 的部份, 跑進去 UIViewController.h 看了一下, 比較像是最後找到了一樣有實作 showViewController:sender: 這個 method 的 UISplitViewController 物件, 讓splitViewController 去處理相關的事情.</p>
+
+<h2>小記</h2>
+
+<p>Adaptive 這個概念是想要讓的 device 可以輕易的改變/判斷 UITraitCollection 的內容進而 Customize layout, 在圖片的支援上也是挺到位; 在 IB 上更是支援各個 size 可以先共用基本的 autolayout 最後在個別 customize, 搭配 preivew 功能更可以馬上知道是否符合需求.</p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -9,7 +9,7 @@
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content="Jun 15th, 2013 Cocoa, Objective-C, iOS 行事曆小記事 2013/07/31更新了關於iOS6的部份內容. 行事曆功能是在iOS5就提出的, 在iOS6部分會有一些不同, 不過大致內容都是差不多的; iOS7的部份因為我電腦Xcode5- &hellip;">
+	<meta name="description" content="Jul 14th, 2013 Cocoa, Objective-C GCD筆記 更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,53 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-14T10:48:00+08:00" data-updated="true" itemprop="datePublished">Jul 14<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/07/14/gcdbi-ji/" itemprop="url">GCD筆記</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<p class='info info' data-title='News'>更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28</p>
+
+
+<p>GCD是在iOS4才推出的一個新功能, 雖然已經出現很長一段時間了, 不過小弟我最近才開始使用到它。最近也跟幾位好友有一些討論, 其中兩個問題我覺得可以跟大家分享一下, 順便也記錄一下。</p>
+
+<h3>Grand Center Dispatch (GCD)</h3>
+
+<p>那個GCD是什麼呢? 又可以用來作些什麼?</p>
+
+<p>首先GCD是由Apple提供的多執行緒(Multiple Thread)解決方案, 主要是 NSOperationQueue、NSThread的替代方案。在使用GCD的時候, 你需要搭配Block來操作。</p>
+
+<p>使用方式就不多做交代了，網路上有很多更加詳細的介紹<del>(我絕對不承認自己也還在摸索的原因)</del></p>
+
+
+		
+		<a href="/blog/2013/07/14/gcdbi-ji/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -273,48 +320,6 @@
 
 		
 		<a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-19T19:56:00+08:00" data-updated="true" itemprop="datePublished">Mar 19<span>th</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
-
-
-</div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/" itemprop="url">我在github的第一個Repo-GCTagList</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p class='info info' data-title='News'>已經可以在CocoaPods & CocoaControls找到GCTagList<br/>使用上有任何建議或問題可以直接在github上給我建議, 謝謝</p>
-
-
-<blockquote><p>在訂完今年的年度目標後, 除了正在並行的讀書會之外, 另一個就是在github上提交自己的lib; GCTagList 雖然內容很粗糙, 不過也算踏出了第一步, 希望之後會越來越好。</p></blockquote>
-
-
-<p></p>
-
-
-		
-		<a href="/blog/2013/03/19/my-first-repo-a-gctaglist-at-github/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>
