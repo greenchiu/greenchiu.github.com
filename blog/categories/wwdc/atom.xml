@@ -4,7 +4,7 @@
   <title><![CDATA[Category: WWDC | Green]]></title>
   <link href="http://greenchiu.github.io/blog/categories/wwdc/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.io/"/>
-  <updated>2014-06-15T01:30:46+08:00</updated>
+  <updated>2014-06-15T16:45:59+08:00</updated>
   <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,50 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[WWDC2014] About the  XCode 6]]></title>
+    <link href="http://greenchiu.github.io/blog/2014/06/15/wwdc2014-about-the-xcode-6/"/>
+    <updated>2014-06-15T16:44:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2014/06/15/wwdc2014-about-the-xcode-6</id>
+    <content type="html"><![CDATA[<p>What's New in XCode 6.
+session 401</p>
+
+<!--more-->
+
+
+<p>一開始提了一拖拉庫的內容, 不過都只是快速帶過</p>
+
+<h2>Playground</h2>
+
+<p>Swift的互動模式, 可以在這邊直接驗證 swift 的程式是否符合預期, 適合拿來做驗證與嘗試, 在Live Rendering 只支援 framework + Iterface Builder 的情況下, playground 即時編譯的特性可以彌補 Live Rendering的缺點.</p>
+
+<h2>Swift in Project</h2>
+
+<p>在專案內使用 Swift, 如果是同一個專案下的話, ObjectC class 可以不用做任何的 import 動作就可以直接使用; 如果是其他的 framework 下的 class, 可以直接使用 <code>@import [frameworkName]</code> 或是 <code>#import "framework-Swift.h"</code>, 就可以載入 framework(module)內的 swift class.</p>
+
+<h2>Test</h2>
+
+<p>在 iOS8 中, 對於 TestCase 開始支援直接執行單一的 testMethod, 不需要在build test target.
+搭配 <code>measureBlock</code> 可以測試該 test 所耗費的時間, 還可以設定時間來判斷這個 case 是否因為超出預期而被判定失敗來拜調整該程式的 proformance; 同時也可以直接使用 profile 來作更進一步的動作.</p>
+
+<h2>Interface Builder</h2>
+
+<p>Swift Live Rendering, 從使用 framework 的 swift class, 可以搭配 <code>@IBDesignable</code> 直接進行畫面的設計與調整; <code>@IBInspectable</code>更是改進了自定義View無法在 IB 中調整對應屬性, 以前在iOS沒有辦法做這件事情, 在 mac 上也還要多做處理使用起來也沒有這麼直觀. 比較可惜的是只有在 framework 的狀態下才能這樣使用.</p>
+
+<p>Debug Selected Views 也可以快速的來對 View 做一些 debug 的動作, 就不用再等待慢慢的編譯完成後再 device/simulator 再進行.</p>
+
+<p>Size-class, 就是簡單的操作, 可以客製不同 layout 的 autolayout.</p>
+
+<h2>Debug View Hierarchy</h2>
+
+<p>這個功能跟 <a href="http://revealapp.com/">Reveal</a> 很像, 不過用起來沒有Reveal那麼完善, 可以拿來做一些簡單的檢查, 再互動沒有反應或者是有些 view 莫名的不見得話, 用這個功能也許可以找到原因.</p>
+
+<h3>小記</h3>
+
+<p>不得不說新的xcode6 進步很多, 再 debug 方面也是大加分, 很期待正式版 release, 不過在beta crash的次數還是很讓人崩潰 Q_Q.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[WWDC2014] About The Adaptive App.]]></title>

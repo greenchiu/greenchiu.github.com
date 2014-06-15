@@ -9,7 +9,7 @@
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content="Jul 14th, 2013 Cocoa, Objective-C GCD筆記 更新了兩項關於在GCD中所呼叫的method應該是background or main thread的資訊, 以及UIView是否能在Background GCD中運行 [at] 2013/07/28 &hellip;">
+	<meta name="description" content="Aug 6th, 2013 Cocoa, Objective-C, iOS 認識NSOperation 最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹 &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -93,6 +93,45 @@
 			<div class="mid-col-container">
 				<div id="content" class="inner">
 <div itemscope itemtype="http://schema.org/Blog">
+
+
+    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+	<div class="meta">
+		<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-06T21:13:00+08:00" data-updated="true" itemprop="datePublished">Aug 6<span>th</span>, 2013</time></div>
+		<div class="tags">
+
+
+	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
+
+
+</div>
+		
+	</div>
+	<h1 class="title" itemprop="name"><a href="/blog/2013/08/06/ren-shi-nsoperation/" itemprop="url">認識NSOperation</a></h1>
+	<div class="entry-content" itemprop="articleBody">
+		<blockquote><p>最近在研究NSOperation+NSOperationQueue vs GCD的部份; 本篇是關於NSOperation + NSOperationQueue的一些介紹</p></blockquote>
+
+
+<p>關於NSOperation, 基本上是用來操作/執行一個單一的任務, 如果你的任務不複雜, 其實可以使用<code>NSInvocationOperation</code>或是<code>NSBlockOperation</code>直接使用;關於NSOperation又可以分成並發(concurrent, 並連)或非並發(non-concurrent, 串連), 這篇會稍微介紹一下在不使用<code>NSOperationQueue</code>如何成為一個<code>concurrent</code>(<code>asynchrouons</code>)的operation.</p>
+
+
+		
+		<a href="/blog/2013/08/06/ren-shi-nsoperation/" class="more-link">Read on &rarr;</a>
+	</div>
+
+</article>
 
 
     <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
@@ -281,45 +320,6 @@
 
 		
 		<a href="/blog/2013/04/09/cocoapodsti-jiao-chu-ti-yan/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-03-31T14:20:00+08:00" data-updated="true" itemprop="datePublished">Mar 31<span>st</span>, 2013</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/cocoa/'>Cocoa</a>, <a class='category' href='/blog/categories/objective-c/'>Objective-C</a>, <a class='category' href='/blog/categories/ios/'>iOS</a>
-
-
-</div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/" itemprop="url">UITextView和UITextField的使用小技巧</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<blockquote><p>其實應該是要說UIResponder才對, 不過範圍好像大了點, 為了偷懶, 就只記錄最近開發過程一些使用的技巧。</p></blockquote>
-
-
-<p></p>
-
-
-		
-		<a href="/blog/2013/03/31/uitextviewhe-uitextfieldde-shi-yong-xiao-ji-qiao/" class="more-link">Read on &rarr;</a>
 	</div>
 
 </article>

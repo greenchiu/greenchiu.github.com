@@ -5,11 +5,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Green</title>
+	<title>[WWDC2014] About the  XCode 6 - Green</title>
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content="Nov 17th, 2012 study 學徒模式-讀書心得 問題不在於征服一個未知的問題，而是一步一步，走出全新的路徑。Gustav Mahler 音樂家與作曲家 Read on &rarr; Nov 11th, 2012 job, study 定個目標 在經過一段有點走入死胡同的時間後, &hellip;">
+	<meta name="description" content="[WWDC2014] About the XCode 6 What&#8217;s New in XCode 6.
+session 401 一開始提了一拖拉庫的內容, 不過都只是快速帶過 Playground Swift的互動模式, 可以在這邊直接驗證 swift 的程式是否符合預期, &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +20,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://greenchiu.github.io/blog/page/4/">
+	<link rel="canonical" href="http://greenchiu.github.io/blog/2014/06/15/wwdc2014-about-the-xcode-6/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -91,127 +92,72 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container">
-				<div id="content" class="inner">
-<div itemscope itemtype="http://schema.org/Blog">
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">[WWDC2014] About the XCode 6</h1>
+	<div class="entry-content" itemprop="articleBody"><p>What&#8217;s New in XCode 6.
+session 401</p>
+
+<!--more-->
 
 
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
+<p>一開始提了一拖拉庫的內容, 不過都只是快速帶過</p>
 
+<h2>Playground</h2>
 
+<p>Swift的互動模式, 可以在這邊直接驗證 swift 的程式是否符合預期, 適合拿來做驗證與嘗試, 在Live Rendering 只支援 framework + Iterface Builder 的情況下, playground 即時編譯的特性可以彌補 Live Rendering的缺點.</p>
 
+<h2>Swift in Project</h2>
 
+<p>在專案內使用 Swift, 如果是同一個專案下的話, ObjectC class 可以不用做任何的 import 動作就可以直接使用; 如果是其他的 framework 下的 class, 可以直接使用 <code>@import [frameworkName]</code> 或是 <code>#import "framework-Swift.h"</code>, 就可以載入 framework(module)內的 swift class.</p>
 
+<h2>Test</h2>
 
+<p>在 iOS8 中, 對於 TestCase 開始支援直接執行單一的 testMethod, 不需要在build test target.
+搭配 <code>measureBlock</code> 可以測試該 test 所耗費的時間, 還可以設定時間來判斷這個 case 是否因為超出預期而被判定失敗來拜調整該程式的 proformance; 同時也可以直接使用 profile 來作更進一步的動作.</p>
 
+<h2>Interface Builder</h2>
 
-  
+<p>Swift Live Rendering, 從使用 framework 的 swift class, 可以搭配 <code>@IBDesignable</code> 直接進行畫面的設計與調整; <code>@IBInspectable</code>更是改進了自定義View無法在 IB 中調整對應屬性, 以前在iOS沒有辦法做這件事情, 在 mac 上也還要多做處理使用起來也沒有這麼直觀. 比較可惜的是只有在 framework 的狀態下才能這樣使用.</p>
 
+<p>Debug Selected Views 也可以快速的來對 View 做一些 debug 的動作, 就不用再等待慢慢的編譯完成後再 device/simulator 再進行.</p>
 
-<time datetime="2012-11-17T17:06:00+08:00" data-updated="true" itemprop="datePublished">Nov 17<span>th</span>, 2012</time></div>
-		<div class="tags">
+<p>Size-class, 就是簡單的操作, 可以客製不同 layout 的 autolayout.</p>
 
+<h2>Debug View Hierarchy</h2>
 
-	<a class='category' href='/blog/categories/study/'>study</a>
+<p>這個功能跟 <a href="http://revealapp.com/">Reveal</a> 很像, 不過用起來沒有Reveal那麼完善, 可以拿來做一些簡單的檢查, 再互動沒有反應或者是有些 view 莫名的不見得話, 用這個功能也許可以找到原因.</p>
 
+<h3>小記</h3>
 
+<p>不得不說新的xcode6 進步很多, 再 debug 方面也是大加分, 很期待正式版 release, 不過在beta crash的次數還是很讓人崩潰 Q_Q.</p>
 </div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/" itemprop="url">學徒模式-讀書心得</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p><img src="/images/IMG_2682.jpg" width="400"></p>
-
-<blockquote><p>問題不在於征服一個未知的問題，而是一步一步，走出全新的路徑。</p><footer><strong>Gustav Mahler</strong> <cite>音樂家與作曲家</cite></footer></blockquote>
-
-
-
-		
-		<a href="/blog/2012/11/17/xue-tu-mo-shi-du-shu-xin-de/" class="more-link">Read on &rarr;</a>
-	</div>
 
 </article>
 
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-11T19:22:00+08:00" data-updated="true" itemprop="datePublished">Nov 11<span>th</span>, 2012</time></div>
-		<div class="tags">
-
-
-	<a class='category' href='/blog/categories/job/'>job</a>, <a class='category' href='/blog/categories/study/'>study</a>
-
-
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
 </div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2012/11/11/ding-ge-mu-biao/" itemprop="url">定個目標</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p><img src="/images/IMG_2652.jpg" width="400"></p>
-
-<blockquote><p>在經過一段有點走入死胡同的時間後, 也開始決定逼迫自己來做一些事情; 可能我這個人就是欠扁吧 … 不給自己一些壓力就會一直死拖活拖的往後延, 因此決定為自己設定一些目標/方式, 讓自己有一個努力的方向或是強制的學習.</p></blockquote>
 
 
 
-		
-		<a href="/blog/2012/11/11/ding-ge-mu-biao/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
-
-    <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-	<div class="meta">
-		<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2012-11-10T11:55:00+08:00" data-updated="true" itemprop="datePublished">Nov 10<span>th</span>, 2012</time></div>
-		<div class="tags">
-
+<section id="comment">
+    <h1 class="title">Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
-		
-	</div>
-	<h1 class="title" itemprop="name"><a href="/blog/2012/11/10/hello-world/" itemprop="url">Hello World.</a></h1>
-	<div class="entry-content" itemprop="articleBody">
-		<p>Hi,  部落格在經過好長一段時間的起起伏伏後, 終於決定搬到page.github.com來, 在上一個<a href="http://greenchiou.blogspot.tw">部落格</a>當初有好常一段的時間沒有進行更新跟維護, 這算是個人的失職<del>絕對不是下班後打LoL打太兇關係</del>.</p>
-
-
-		
-		<a href="/blog/2012/11/10/hello-world/" class="more-link">Read on &rarr;</a>
-	</div>
-
-</article>
-
+</section>
 </div>
-<nav id="pagenavi">
-    
-        <a href="/blog/page/3/" class="prev">Prev</a>
-    
-    
-    <div class="center"><a href="/blog/archives">Blog Archives</a></div>
-</nav></div>
 			</div>
 			<footer id="footer" class="inner"><p>
   Copyright &copy; 2012~2013 - Green Chiu -
@@ -232,7 +178,10 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       var disqus_shortname = 'greenchiu';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://greenchiu.github.io/blog/2014/06/15/wwdc2014-about-the-xcode-6/';
+        var disqus_url = 'http://greenchiu.github.io/blog/2014/06/15/wwdc2014-about-the-xcode-6/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
