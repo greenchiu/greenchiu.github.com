@@ -5,11 +5,11 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Categories - Green</title>
+	<title>[Memo] 關於 UIView convertRect - Green</title>
 	<meta name="author" content="Green Chiu">
 
 	
-	<meta name="description" content=" Job [ 1 ] Study [ 2 ] Objective-c [ 10 ] Ios [ 12 ] Others [ 1 ] Cocoa [ 9 ] Cocoapods [ 1 ] Github [ 1 ] Wwdc [ 2 ] ">
+	<meta name="description" content="[Memo] 關於 UIView convertRect 來記錄一下前幾天 Allen 問了我 UIView 兩個 method convertRect:fromView: convertRect:toView: 有什麼差異, 該如何使用的問題. 舉個例子: 當碰到需要將一個 B view &hellip;">
 	
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,7 +19,7 @@
 
 	<link href="/atom.xml" rel="alternate" title="Green" type="application/atom+xml">
 	
-	<link rel="canonical" href="http://greenchiu.github.io/blog/categories/">
+	<link rel="canonical" href="http://greenchiu.github.io/blog/2014/09/01/memo-the-uiview-convertrect/">
 	<link href="/favicon.png" rel="shortcut icon">
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -91,34 +91,84 @@
 		</div>	
 		<div class="mid-col">
 			<div class="mid-col-container">
-				<div id="content" class="inner"><article class="page">
-    
-    <h1 class="title">Categories</h1>
-    
-    <div class="entry-content"><ul>
+				<div id="content" class="inner"><article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+	<h1 class="title" itemprop="name">[Memo] 關於 UIView convertRect</h1>
+	<div class="entry-content" itemprop="articleBody"><p>來記錄一下前幾天 Allen 問了我 UIView 兩個 method</p>
 
-    <li><a href="/blog/categories/job/">Job</a> [ 1 ]</li>
-
-    <li><a href="/blog/categories/study/">Study</a> [ 2 ]</li>
-
-    <li><a href="/blog/categories/Objective-C/">Objective-c</a> [ 10 ]</li>
-
-    <li><a href="/blog/categories/iOS/">Ios</a> [ 12 ]</li>
-
-    <li><a href="/blog/categories/others/">Others</a> [ 1 ]</li>
-
-    <li><a href="/blog/categories/Cocoa/">Cocoa</a> [ 9 ]</li>
-
-    <li><a href="/blog/categories/CocoaPods/">Cocoapods</a> [ 1 ]</li>
-
-    <li><a href="/blog/categories/Github/">Github</a> [ 1 ]</li>
-
-    <li><a href="/blog/categories/WWDC/">Wwdc</a> [ 2 ]</li>
-
+<ul>
+<li> convertRect:fromView:</li>
+<li> convertRect:toView:</li>
 </ul>
 
+
+<p>有什麼差異, 該如何使用的問題.</p>
+
+<!--more-->
+
+
+<p>舉個例子:</p>
+
+<p>當碰到需要將一個 B view 中的是一個 C View 位置(C view ‘s frame), 要被轉移到另一個 A view 上的時候, 要讓<code>視覺上的位置保持不變</code>.</p>
+
+<p>配合下面的圖片來服用~</p>
+
+<p><img src="http://cl.ly/image/1A292h1R0M2d/view_sample01.png"></p>
+
+<p>途中有三個 View 分別為 A, B, C<br/>
+B 是 A 的 subview,<br/>
+C 是 B 的 subview,</p>
+
+<p>這時我們要將 C 轉移到 A,<br/>
+參考下圖 (我先把 B 隱藏起來)<br/>
+這時就可以使用 convertRect:toView: 來取得新的 frame 給 C.</p>
+
+<figure class='code'><figcaption><span>convertRect:toView: </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">newFrame</span> <span class="o">=</span> <span class="p">[</span><span class="n">viewB</span> <span class="nl">convertRect:</span><span class="n">viewC</span><span class="p">.</span><span class="n">frame</span> <span class="nl">toView:</span><span class="n">viewA</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://cl.ly/image/401m3j421N2T/view_sample2.png"></p>
+
+<p>在將 C 直接轉移到 A 後( C 是 A 的 subview ), 我們想把 B 加入到 C 裡面, 視覺位置依然保持不變</p>
+
+<p>這時 B 的 frame 是對應 A 的, 想要取得 B 在 C 應該有的位置, 就使用 convertRect:fromView:</p>
+
+<figure class='code'><figcaption><span>convertRect:fromView: </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">newFrame</span> <span class="o">=</span> <span class="p">[</span><span class="n">viewC</span> <span class="nl">convertRect:</span><span class="n">viewB</span><span class="p">.</span><span class="n">frame</span> <span class="nl">fromView:</span><span class="n">viewA</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後的結果會跟下面一樣</p>
+
+<p><img src="http://cl.ly/image/2L390s0R0h3r/view_sample3.png"></p>
+
+<p>這個兩個 method 使用到的時機主要就是保持視覺位置不變, 通常是做<code>動態</code>被使用到的機會會最大~</p>
 </div>
+
 </article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+	<a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
+	
+	<a class="addthis_counter addthis_pill_style"></a>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
 
 
 <section id="comment">
@@ -126,7 +176,6 @@
     <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </div>
 </section>
-
 </div>
 			</div>
 			<footer id="footer" class="inner"><p>
@@ -149,8 +198,8 @@ Design credit: <a href="http://shashankmehta.in/archive/2012/greyshade.html">Sha
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://greenchiu.github.io/blog/categories/index.html';
-        var disqus_url = 'http://greenchiu.github.io/blog/categories/index.html';
+        var disqus_identifier = 'http://greenchiu.github.io/blog/2014/09/01/memo-the-uiview-convertrect/';
+        var disqus_url = 'http://greenchiu.github.io/blog/2014/09/01/memo-the-uiview-convertrect/';
         var disqus_script = 'embed.js';
       
     (function () {

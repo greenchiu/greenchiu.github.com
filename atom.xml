@@ -4,7 +4,7 @@
   <title><![CDATA[Green]]></title>
   <link href="http://greenchiu.github.io/atom.xml" rel="self"/>
   <link href="http://greenchiu.github.io/"/>
-  <updated>2014-06-15T16:45:59+08:00</updated>
+  <updated>2014-09-01T22:52:22+08:00</updated>
   <id>http://greenchiu.github.io/</id>
   <author>
     <name><![CDATA[Green Chiu]]></name>
@@ -12,6 +12,70 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[Memo] 關於 UIView convertRect]]></title>
+    <link href="http://greenchiu.github.io/blog/2014/09/01/memo-the-uiview-convertrect/"/>
+    <updated>2014-09-01T22:26:00+08:00</updated>
+    <id>http://greenchiu.github.io/blog/2014/09/01/memo-the-uiview-convertrect</id>
+    <content type="html"><![CDATA[<p>來記錄一下前幾天 Allen 問了我 UIView 兩個 method</p>
+
+<ul>
+<li> convertRect:fromView:</li>
+<li> convertRect:toView:</li>
+</ul>
+
+
+<p>有什麼差異, 該如何使用的問題.</p>
+
+<!--more-->
+
+
+<p>舉個例子:</p>
+
+<p>當碰到需要將一個 B view 中的是一個 C View 位置(C view ‘s frame), 要被轉移到另一個 A view 上的時候, 要讓<code>視覺上的位置保持不變</code>.</p>
+
+<p>配合下面的圖片來服用~</p>
+
+<p><img src="http://cl.ly/image/1A292h1R0M2d/view_sample01.png"></p>
+
+<p>途中有三個 View 分別為 A, B, C<br/>
+B 是 A 的 subview,<br/>
+C 是 B 的 subview,</p>
+
+<p>這時我們要將 C 轉移到 A,<br/>
+參考下圖 (我先把 B 隱藏起來)<br/>
+這時就可以使用 convertRect:toView: 來取得新的 frame 給 C.</p>
+
+<figure class='code'><figcaption><span>convertRect:toView: </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">newFrame</span> <span class="o">=</span> <span class="p">[</span><span class="n">viewB</span> <span class="nl">convertRect:</span><span class="n">viewC</span><span class="p">.</span><span class="n">frame</span> <span class="nl">toView:</span><span class="n">viewA</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p><img src="http://cl.ly/image/401m3j421N2T/view_sample2.png"></p>
+
+<p>在將 C 直接轉移到 A 後( C 是 A 的 subview ), 我們想把 B 加入到 C 裡面, 視覺位置依然保持不變</p>
+
+<p>這時 B 的 frame 是對應 A 的, 想要取得 B 在 C 應該有的位置, 就使用 convertRect:fromView:</p>
+
+<figure class='code'><figcaption><span>convertRect:fromView: </span></figcaption>
+ <div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='objc'><span class='line'><span class="n">newFrame</span> <span class="o">=</span> <span class="p">[</span><span class="n">viewC</span> <span class="nl">convertRect:</span><span class="n">viewB</span><span class="p">.</span><span class="n">frame</span> <span class="nl">fromView:</span><span class="n">viewA</span><span class="p">];</span>
+</span><span class='line'><span class="p">...</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>最後的結果會跟下面一樣</p>
+
+<p><img src="http://cl.ly/image/2L390s0R0h3r/view_sample3.png"></p>
+
+<p>這個兩個 method 使用到的時機主要就是保持視覺位置不變, 通常是做<code>動態</code>被使用到的機會會最大~</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[[WWDC2014] About the  XCode 6]]></title>
